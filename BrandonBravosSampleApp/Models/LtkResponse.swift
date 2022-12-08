@@ -17,7 +17,7 @@ class LtkResponse: Decodable{
     func createProfiles() ->[Profile]{
         
         // allows searching for profile with user id
-        var profileDic: [String: Profile] = [:]
+        var profileDic: [ProfileIDString: Profile] = [:]
 
         // create a dictionary of profiles
         for profile in profiles {
@@ -42,7 +42,7 @@ class LtkResponse: Decodable{
         }
         
         // dictionary of products so they can be found by their product id
-        var productDic: [String : Product] = [:]
+        var productDic: [ProductIdString : Product] = [:]
         
         for product in products {
             productDic[product.id] = product

@@ -9,6 +9,16 @@ import Foundation
 import UIKit
 import AVFoundation
 
+typealias UrlImageTupleArray = [(url: String, image: UIImage)]
+
+typealias NetworkResult = (Result<[Profile], NetworkError>)->()
+
+typealias ProfileIDString = String
+typealias ProductIdString = String
+typealias PostImageUrlString = String
+typealias ProductImageUrlString = String
+typealias ProductHyperLinkString = String
+
 extension UIImage{
     
     /// resizes an image and reduces cpu costs

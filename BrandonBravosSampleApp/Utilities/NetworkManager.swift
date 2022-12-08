@@ -15,9 +15,7 @@ enum NetworkError: Error{
     case invalidData
 }
 
-typealias UrlImageTupleArray = [(url: String, image: UIImage)]
 
-typealias NetworkResult = (Result<[Profile], NetworkError>)->()
 
 class NetworkManager{
     

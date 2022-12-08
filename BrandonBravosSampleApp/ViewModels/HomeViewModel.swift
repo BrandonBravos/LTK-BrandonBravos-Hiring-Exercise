@@ -16,7 +16,7 @@ class HomeViewModel{
     private var urlImageArray: UrlImageTupleArray = []
     
     // a dictionary used to get profiles by post url image
-    private var fetchUserDic = [String:Profile] ()
+    private var fetchUserDic = [ PostImageUrlString : Profile] ()
 
   
     /// returns an image in a list of loaded images

@@ -25,7 +25,7 @@ class DisplayViewModel{
     private var profileImage = UrlImageTupleArray()
     
     /// a dictionary of strings used to help correct any misaligned links on the collection view
-    private var productLinkDic = [String : String]()
+    private var productLinkDic = [ProductImageUrlString : ProductHyperLinkString]()
     
     
     /// returns the posts user
