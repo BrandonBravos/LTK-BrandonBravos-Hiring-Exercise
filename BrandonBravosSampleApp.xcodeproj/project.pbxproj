@@ -151,8 +151,8 @@
 			children = (
 				A16C81EB293F304C00E749FD /* LtkResponse.swift */,
 				A16C81ED293F307E00E749FD /* Profile.swift */,
-				A16C81EF293F30A400E749FD /* Product.swift */,
 				A16C81F3293F30F100E749FD /* LtkPost.swift */,
+				A16C81EF293F30A400E749FD /* Product.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
