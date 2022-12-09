@@ -9,11 +9,10 @@ import Foundation
 import UIKit
 import AVFoundation
 
-typealias UrlImageTupleArray = [(url: String, image: UIImage)]
+typealias UrlImageTuple = (url: String, image: UIImage)
 
 typealias NetworkResult = (Result<[Profile], NetworkError>)->()
-
-typealias ProfileIDString = String
+typealias ProfileIdString = String
 typealias ProductIdString = String
 typealias PostImageUrlString = String
 typealias ProductImageUrlString = String

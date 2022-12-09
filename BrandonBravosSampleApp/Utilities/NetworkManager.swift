@@ -87,8 +87,8 @@ class NetworkManager{
     }
     
     /// downloads and returns a dictionary of UIImages? with their url being the key
-    func downloadImages(from urls: [String], completed: @escaping (UrlImageTupleArray) -> ()) {
-        var images = UrlImageTupleArray()
+    func downloadAllImages(_ urls: [String], completion: @escaping ([UrlImageTuple]) -> ()) {
+        var images = [UrlImageTuple]()
         
         
         for urlString in urls {
@@ -100,7 +100,7 @@ class NetworkManager{
                         let img = UIImage(data: data)
                         images.append((urlString, img!))
                         print("using cached image")
-                        completed(images)
+                        completion(images)
                         continue
                     }
                 }
@@ -108,14 +108,14 @@ class NetworkManager{
 
             
             guard let url = URL(string: urlString) else {
-                completed([])
+                completion([])
                 return
             }
             
             
             let task = URLSession.shared.dataTask(with: url) { data, response, error in
                 guard let data = data, let image = UIImage(data: data) else {
-                    completed([])
+                    completion([])
                     return
                 }
                 
@@ -127,7 +127,7 @@ class NetworkManager{
                 let finalImage = image.resizeImage(toSize: CGSize(width: width, height: image.getHeightAspectRatio(withWidth: width)))
                 self.storeImage(urlString: urlString, img: finalImage)
                 images.append((urlString, finalImage))
-                completed(images)
+                completion(images)
             }
             
             task.resume()
@@ -135,6 +135,50 @@ class NetworkManager{
 
     }
    
+    
+    
+    func downloadImage(_ urlString: String, completion: @escaping (Result<UrlImageTuple, NetworkError>) -> Void) {
+            var returnImage: UrlImageTuple = ("" ,UIImage())
+        
+            if let dict = UserDefaults.standard.object(forKey: "ImageCache") as? [String:String]{
+                if let path = dict[urlString]{
+                    if let data = try? Data(contentsOf: URL(fileURLWithPath: path)){
+                        returnImage = (urlString, UIImage(data: data)!)
+                        print("downloadImage(): using cached image")
+                        completion(.success(returnImage))
+                    }
+                }
+            }
+
+            
+            guard let url = URL(string: urlString) else {
+                completion(.failure(.invalidURL))
+                return
+            }
+            
+            
+            let task = URLSession.shared.dataTask(with: url) { data, response, error in
+                guard let data = data, let image = UIImage(data: data) else {
+                    completion(.failure(.invalidData))
+                    return
+                }
+                
+                //TODO: reduce imageQuality based on device width
+                let imageQuality: CGFloat = 2 // 2 is a good medium for smooth scrolling on both iPad and iPhone
+                let width = UIScreen.main.bounds.width * imageQuality
+               
+                // resize the image, resizing is needed to keep frame rate low while scrolling
+                let finalImage = image.resizeImage(toSize: CGSize(width: width, height: image.getHeightAspectRatio(withWidth: width)))
+                self.storeImage(urlString: urlString, img: finalImage)
+                returnImage = (urlString, finalImage)
+                completion(.success(returnImage))
+            }
+            
+            task.resume()
+        
+        
+    }
+    
         
     /// a function used for debugging, prints out a json object
     private func printJsonData(with data: Data){

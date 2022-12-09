@@ -28,7 +28,9 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.addViews()
-
+        
+                
+        
         // gets an array of creator profiles, their posts, and products related to that post
         viewModel.getPostData { [weak self] in
             DispatchQueue.main.async {

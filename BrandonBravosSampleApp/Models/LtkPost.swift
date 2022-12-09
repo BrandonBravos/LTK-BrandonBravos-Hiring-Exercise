@@ -11,13 +11,13 @@ import UIKit
 class LtkPost: Decodable{
     
     /// an array of posts related products
-    var products: [Product]?
+    var products: [Product] = []
     
     /// returns an [(url, uiimage)] of the posts main image
-    var heroImage = UrlImageTupleArray()
+    var heroImage = [UrlImageTuple]()
     
     /// url that returns post image
-    var heroImageUrl: String?
+    var heroImageUrl: String
     
     /// main images width
     var heroWidth: Int?
@@ -26,10 +26,10 @@ class LtkPost: Decodable{
     var heroImageHeight: Int?
     
     /// unique id for post
-    var id: String?
+    var id: String
     
     /// unknown: do not use
-    var profileId: String?
+    var profileId: String
     
     /// the parent creator id related to the post
     var profileUserId: String?
@@ -58,7 +58,7 @@ class LtkPost: Decodable{
     var shareUrl: String?
     
     /// an array of products related to this post
-    var productIds: [String]?
+    var productIds: [String] = []
     
     //  convert API's snake case to iOS camel case
     private enum CodingKeys : String, CodingKey {

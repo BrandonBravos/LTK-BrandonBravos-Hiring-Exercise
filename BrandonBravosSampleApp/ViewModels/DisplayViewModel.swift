@@ -10,27 +10,28 @@ import UIKit
 class DisplayViewModel{
     
     /// the user profile related to this display
-    private var user: Profile?
+    private var user: Profile!
     
     /// products related to this post
-    private var products: [Product]?
+    private var products: [Product] = []
     
     /// main  media for post
-    private var postPicture: UIImage? = UIImage()
+    private var postPicture: UIImage = UIImage()
     
     /// an array of (url, images) of the products related to this post, this is downloaded once displayed
-    private var productImages = UrlImageTupleArray()
+    private var productImages = [UrlImageTuple]()
     
     /// the users profile image, this begins download with post
-    private var profileImage = UrlImageTupleArray()
+    private var profileImage = [UrlImageTuple]()
     
     /// a dictionary of strings used to help correct any misaligned links on the collection view
     private var productLinkDic = [ProductImageUrlString : ProductHyperLinkString]()
     
+    private var post = [LtkPost]()
     
     /// returns the posts user
     public func getUser() -> Profile{
-        return user!
+        return user
     }
     
     public func getCount() -> Int{
@@ -40,9 +41,9 @@ class DisplayViewModel{
     /// IMPORTANT: use this for initialization of the display view.
     public func setUser(user: Profile){
         self.user = user
-        self.products = user.ltks?.first?.products
+        self.products = user.ltks.first?.products ?? []
         
-        for product in products!{
+        for product in products{
             productLinkDic[product.imageUrl] = product.hyperlink
         }
     }
@@ -52,7 +53,7 @@ class DisplayViewModel{
     }
     
     public func getPostImage() -> UIImage{
-        return postPicture!
+        return postPicture
     }
     
     public func getProfilePicture ()-> UIImage?{
@@ -66,28 +67,33 @@ class DisplayViewModel{
     
     /// gets the post pictures and product images
     public func fetchData(completion: @escaping ()->()){
-        NetworkManager.shared.downloadImages(from: [user!.ltks![0].heroImageUrl!], completed: { result in
-            self.postPicture = result.first?.image
-            DispatchQueue.global(qos: .userInitiated).async {
+        guard let user = user else {
+            print("error finding user")
+            return
+        }
+        
+        guard let post = user.ltks.first else{
+            print("Unable to find post")
+            return
+        }
+       
+        
+        NetworkManager.shared.downloadAllImages([post.heroImageUrl]) { result in
+            self.postPicture = result.first!.image
             self.fetchImages{ [weak self] result in
                 self?.productImages = result
                 completion()
-            }
         }
-        
-    })
-        
-
+        }
     }
-    
     /// grabs all images from an array of urls
-    private func fetchImages(completion: @escaping (UrlImageTupleArray) -> ()){
+    private func fetchImages(completion: @escaping ([UrlImageTuple]) -> ()){
         var urls = [String]()
-        for product in products!{urls.append(product.imageUrl)}
-        NetworkManager.shared.downloadImages(from: urls, completed: completion)
+        for product in products{urls.append(product.imageUrl)}
+        NetworkManager.shared.downloadAllImages(urls, completion: completion)
     }
     
-    private func fetchProfileImage(completion: @escaping (UrlImageTupleArray) -> ()){
-        NetworkManager.shared.downloadImages(from: [user!.avatarUrl], completed: completion)
+    private func fetchProfileImage(completion: @escaping ([UrlImageTuple]) -> ()){
+        NetworkManager.shared.downloadAllImages([user!.avatarUrl], completion: completion)
     }
 }

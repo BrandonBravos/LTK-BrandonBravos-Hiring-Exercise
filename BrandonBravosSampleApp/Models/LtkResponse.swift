@@ -10,60 +10,40 @@ import Foundation
 class LtkResponse: Decodable{
     var ltks: [LtkPost]
     var profiles: [Profile]
-    var products: [Product]
+    var products: [Product] 
     
     
     /// creates an array of user profiles from the network call
     func createProfiles() ->[Profile]{
         
         // allows searching for profile with user id
-        var profileDic: [ProfileIDString: Profile] = [:]
+        var profileDic: [ProfileIdString: Profile] = [:]
+        
+        // dictionary of products so they can be found by their product id
+        var productDic: [ProductIdString : Product] = [:]
 
         // create a dictionary of profiles
         for profile in profiles {
             profileDic[profile.id] = profile
-            profile.ltks = []
         }
         
-        // add ltks to profiles
-        for ltk in ltks {
-            
-            // add ltk to profile
-            let id = ltk.profileId!
-            let profile = profileDic[id]
-            
-            if profile?.ltks == nil{
-                profile?.ltks = []
-            }
-            
-            // add the ltk to our profile object
-            profile?.ltks!.append(ltk)
-            
-        }
-        
-        // dictionary of products so they can be found by their product id
-        var productDic: [ProductIdString : Product] = [:]
-        
+        // create a dictionary of products
         for product in products {
             productDic[product.id] = product
         }
         
-        // sort through our ltks product ids, use our product Dic to check out products
+        // add ltks to profiles
         for ltk in ltks {
-            for product in ltk.productIds! {
-                if ltk.products == nil{
-                    ltk.products = []
-                }
-                ltk.products?.append(productDic[product]!)
+            let profile = profileDic[ltk.profileId]
+            
+            for product in ltk.productIds {
+                ltk.products.append(productDic[product]!)
             }
+            
+            // add the ltk to our profile object
+            profile?.ltks.append(ltk)
         }
         
-        // flatten our user dictionary into an array
-        var userArray: [Profile] = []
-        for (_, value) in profileDic{
-            userArray.append(value)
-        }
-        
-        return userArray
+        return  profiles.compactMap { profileDic[$0.id] }
     }
 }

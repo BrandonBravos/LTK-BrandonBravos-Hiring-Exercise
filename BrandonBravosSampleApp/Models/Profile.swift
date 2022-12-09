@@ -10,10 +10,10 @@ import UIKit
 class Profile: Decodable, HasDownloadableImages{
   
     /// an array of user posts
-    var ltks: [LtkPost]?
+    var ltks: [LtkPost] = []
     
     /// the (url, image) of the users profile
-    var profileImage = UrlImageTupleArray()
+    var profileImage = [UrlImageTuple]()
     
     
     // MARK: Codable Data From Get Request
@@ -71,17 +71,15 @@ class Profile: Decodable, HasDownloadableImages{
                     searchable = "searchable"
            }
     
-
-    
     lazy var downloadableImageUrls: [String] = {
         return [avatarUrl]
         }()
     
      func downloadImages(){
-        NetworkManager.shared.downloadImages(from: downloadableImageUrls, completed: { result in
+        NetworkManager.shared.downloadAllImages(downloadableImageUrls, completion: { result in
             self.profileImage = result
         })
-        }
+     }
     }
 
 
