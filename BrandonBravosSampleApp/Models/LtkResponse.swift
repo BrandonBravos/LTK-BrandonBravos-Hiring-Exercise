@@ -8,11 +8,11 @@
 import Foundation
 
 class LtkResponse: Decodable{
-    var ltks: [LtkPost]
     var profiles: [Profile]
+    var ltks: [LtkPost]
     var products: [Product] 
     
-    
+
     /// creates an array of user profiles from the network call
     func createProfiles() ->[Profile]{
         
@@ -41,7 +41,7 @@ class LtkResponse: Decodable{
             }
             
             // add the ltk to our profile object
-            profile?.ltks.append(ltk)
+            profile?.ltks = ltk
         }
         
         return  profiles.compactMap { profileDic[$0.id] }

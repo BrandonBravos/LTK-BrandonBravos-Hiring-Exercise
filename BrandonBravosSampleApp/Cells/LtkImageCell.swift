@@ -17,24 +17,20 @@ class LtkImageCell: UICollectionViewCell{
     override init(frame: CGRect) {
         super.init(frame: frame)
         animateFadeIn()
-      
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     private func animateFadeIn(){
         alpha = 0
-
         UIView.animate(withDuration: 0.2, delay: 0,  options: .curveEaseIn, animations: {
             self.alpha = 1
         })
     }
     
     override func layoutSubviews() {
-        
         imageView.frame = frame
         imageView.backgroundColor = .systemPink
         imageView.layer.cornerRadius = 15
@@ -47,9 +43,6 @@ class LtkImageCell: UICollectionViewCell{
             imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
             imageView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
-        
-     
     }
-
 }
 

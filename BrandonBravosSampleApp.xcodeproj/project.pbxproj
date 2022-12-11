@@ -178,10 +178,10 @@
 		A16C820F294049A300E749FD /* CustomViews */ = {
 			isa = PBXGroup;
 			children = (
-				A1995A0A2941E5350053052D /* CustomTabBarView.swift */,
 				A16C8210294049DE00E749FD /* LtkLoadIndicator.swift */,
 				A16C821229404F1700E749FD /* HeaderSearchLabelView.swift */,
 				A16C821429404F6500E749FD /* SearchView.swift */,
+				A1995A0A2941E5350053052D /* CustomTabBarView.swift */,
 			);
 			path = CustomViews;
 			sourceTree = "<group>";

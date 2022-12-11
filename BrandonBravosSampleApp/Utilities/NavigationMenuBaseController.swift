@@ -17,7 +17,6 @@ struct TabBarController{
     static var parentController: NavigationMenuBaseController?
 }
 
-
 class NavigationMenuBaseController: UITabBarController {
     
     // the views we want to show

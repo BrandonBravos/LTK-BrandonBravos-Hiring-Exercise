@@ -8,13 +8,12 @@
 import UIKit
 
 class Profile: Decodable, HasDownloadableImages{
-  
+
     /// an array of user posts
-    var ltks: [LtkPost] = []
+    var ltks: LtkPost!
     
-    /// the (url, image) of the users profile
-    var profileImage = [UrlImageTuple]()
-    
+    /// the UIImage? heroImage object.
+    var profileImage:UIImage?
     
     // MARK: Codable Data From Get Request
         /// the id of a user profile
@@ -76,13 +75,11 @@ class Profile: Decodable, HasDownloadableImages{
         }()
     
      func downloadImages(){
-        NetworkManager.shared.downloadAllImages(downloadableImageUrls, completion: { result in
-            self.profileImage = result
-        })
-     }
+        NetworkManager.shared.downloadMultipleImages(downloadableImageUrls, completion: { result in
+            self.profileImage = result.image
+            })
+        }
     }
-
-
 
 protocol HasDownloadableImages{
     func downloadImages()

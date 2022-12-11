@@ -8,61 +8,30 @@
 import UIKit
 
 class DisplayViewModel{
-    
-    /// the user profile related to this display
+    // the user profile related to this display
     private var user: Profile!
     
-    /// products related to this post
+    // products related to this post
     private var products: [Product] = []
     
-    /// main  media for post
+    // main  media for post
     private var postPicture: UIImage = UIImage()
     
-    /// an array of (url, images) of the products related to this post, this is downloaded once displayed
-    private var productImages = [UrlImageTuple]()
+    // an array of (url, images) of the products related to this post, this is downloaded once displayed
+    private var loadedProducts = [Product]()
     
-    /// the users profile image, this begins download with post
-    private var profileImage = [UrlImageTuple]()
+    // the users profile image, this begins download with post
+    private var profileImage: UIImage?
     
-    /// a dictionary of strings used to help correct any misaligned links on the collection view
-    private var productLinkDic = [ProductImageUrlString : ProductHyperLinkString]()
+    // a dictionary of strings used to update our product when an image has finished downloading
+    private var productLinkDic = [ProductImageUrlString : Product]()
     
-    private var post = [LtkPost]()
-    
-    /// returns the posts user
-    public func getUser() -> Profile{
-        return user
-    }
-    
-    public func getCount() -> Int{
-        return productImages.count
-    }
-    
-    /// IMPORTANT: use this for initialization of the display view.
-    public func setUser(user: Profile){
+    init(user: Profile){
         self.user = user
-        self.products = user.ltks.first?.products ?? []
-        
+        self.products = user.ltks!.products
         for product in products{
-            productLinkDic[product.imageUrl] = product.hyperlink
+            productLinkDic[product.imageUrl] = product
         }
-    }
-    
-    public func getProductImage(withIndex indexPath: IndexPath) -> UIImage{
-        return productImages[indexPath.row].image
-    }
-    
-    public func getPostImage() -> UIImage{
-        return postPicture
-    }
-    
-    public func getProfilePicture ()-> UIImage?{
-        return user?.profileImage.first?.image
-    }
-    
-    public func getProductUrl(withIndexPath indexPath: IndexPath)-> String?{
-       
-        return productLinkDic[productImages[indexPath.row].url]
     }
     
     /// gets the post pictures and product images
@@ -72,28 +41,54 @@ class DisplayViewModel{
             return
         }
         
-        guard let post = user.ltks.first else{
+        guard let post = user.ltks else{
             print("Unable to find post")
             return
         }
        
-        
-        NetworkManager.shared.downloadAllImages([post.heroImageUrl]) { result in
-            self.postPicture = result.first!.image
-            self.fetchImages{ [weak self] result in
-                self?.productImages = result
+        self.profileImage = user.profileImage
+        self.postPicture = post.heroImage!
+   
+        downloadProductImages{[weak self] result in
+            DispatchQueue.main.async {
+                let product = self?.productLinkDic[result.url]
+                product?.productImage = result.image
+                self?.loadedProducts.append(product!)
                 completion()
+            }
         }
-        }
-    }
-    /// grabs all images from an array of urls
-    private func fetchImages(completion: @escaping ([UrlImageTuple]) -> ()){
-        var urls = [String]()
-        for product in products{urls.append(product.imageUrl)}
-        NetworkManager.shared.downloadAllImages(urls, completion: completion)
     }
     
-    private func fetchProfileImage(completion: @escaping ([UrlImageTuple]) -> ()){
-        NetworkManager.shared.downloadAllImages([user!.avatarUrl], completion: completion)
+    func downloadProductImages(completion: @escaping (UrlImageTuple) -> ()){
+        var urls = [String]()
+        for product in products{ urls.append(product.imageUrl) }
+        NetworkManager.shared.downloadMultipleImages(urls, completion: {result in
+            completion(result)
+    
+        })
+    }
+    
+    public func getUser() -> Profile{
+        return user
+    }
+    
+    public func getCount() -> Int{
+        return loadedProducts.count
+    }
+    
+    public func getProductImage(withIndex indexPath: IndexPath) -> UIImage{
+        return loadedProducts[indexPath.row].productImage ?? UIImage()
+    }
+    
+    public func getPostImage() -> UIImage{
+        return postPicture
+    }
+    
+    public func getProfilePicture ()-> UIImage?{
+        return user?.profileImage
+    }
+    
+    public func getProductUrl(withIndexPath indexPath: IndexPath)-> String?{
+        return loadedProducts[indexPath.row].hyperlink
     }
 }

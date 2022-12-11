@@ -8,7 +8,6 @@
 import UIKit
 
 class HomeViewController: UIViewController {
-
     
     var viewModel = HomeViewModel()
     
@@ -28,9 +27,7 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.addViews()
-        
-                
-        
+                        
         // gets an array of creator profiles, their posts, and products related to that post
         viewModel.getPostData { [weak self] in
             DispatchQueue.main.async {
@@ -38,25 +35,15 @@ class HomeViewController: UIViewController {
                 self?.loadIndicator.pause()
             }
         }
-        
-      
     }
-
 }
-
 
 // MARK: Delegates
 extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
-    
- 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 100, height: 100)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        print("hit")
-        return CGSize(width: 100, height: 100)
-    }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return viewModel.getCount()
     }
@@ -87,7 +74,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LtkImageCell.reuseIdentifier, for: indexPath) as! LtkImageCell
-        cell.imageView.image = viewModel.getImage(withIndex: indexPath)
+        cell.imageView.image = viewModel.getUser(withIndex: indexPath).ltks.heroImage
         return cell
         
     }
@@ -137,7 +124,6 @@ extension HomeViewController{
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -80)
         ])
         
-       
         view.addSubview(loadIndicator)
         loadIndicator.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

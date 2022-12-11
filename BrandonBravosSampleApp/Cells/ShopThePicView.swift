@@ -23,11 +23,10 @@ class ShopThePicView: UICollectionReusableView{
     override func layoutSubviews() {
         super.layoutSubviews()
         label.frame = bounds
-        
-
     }
     
     func config(){
         label.text = "SHOP THE PIC"
-        addSubview(label)    }
+        addSubview(label)
+    }
 }

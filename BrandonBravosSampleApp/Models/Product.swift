@@ -14,7 +14,7 @@ class Product: Decodable{
     var productImage: UIImage?
     
     // MARK: Codable Data From Get Request
-    
+
         /// product unique id
         var id: String
     

@@ -14,8 +14,9 @@ class LtkPost: Decodable{
     var products: [Product] = []
     
     /// returns an [(url, uiimage)] of the posts main image
-    var heroImage = [UrlImageTuple]()
+    var heroImage: UIImage?
     
+    // MARK: Codable Data From Get Request
     /// url that returns post image
     var heroImageUrl: String
     

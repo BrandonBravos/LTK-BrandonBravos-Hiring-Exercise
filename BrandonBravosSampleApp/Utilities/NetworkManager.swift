@@ -15,26 +15,23 @@ enum NetworkError: Error{
     case invalidData
 }
 
-
-
 class NetworkManager{
     
     /// the shared instance of this Network manager
     static let shared = NetworkManager()
     private let apiURL = "https://api-gateway.rewardstyle.com/api/ltk/v2/ltks/?featured=true&limit=20"
 
-    
+    // the maximum amount of images we want to download at once.
+    private let maxDownloadThreads = 4
     
     /// gets LTKS, Profiles and Products.
     func fetchData(completed: @escaping NetworkResult){
-        
         guard let url = URL(string: apiURL) else {
             completed(.failure(.invalidURL))
             return
         }
                
         let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
-            
             if let _ =  error {
                 completed(.failure(.unableToComplete))
                 return
@@ -51,9 +48,7 @@ class NetworkManager{
             }
             
             do {
-                
                // self.printJsonData(with: data)  // used for debugging
-                
                 let decoder = JSONDecoder()
                 let decodedResponse = try decoder.decode(LtkResponse.self, from: data)
                 completed(.success(decodedResponse.createProfiles()))
@@ -61,102 +56,51 @@ class NetworkManager{
                 completed(.failure(.invalidData))
             }
         }
-        
         task.resume()
     }
     
- 
-    
     /// creates a temporary folder for caching
      func storeImage(urlString: String, img: UIImage){
+         // create a temporary path
         let path = NSTemporaryDirectory().appending(UUID().uuidString)
         let url = URL(fileURLWithPath: path)
         
+         // not needed, since we already reize image to be smaller, but may be useful for further implementaitons
         let data = img.jpegData(compressionQuality: 0.5)
+         
+         // write data to our temp folder
         try? data?.write(to: url)
         
         var dict = UserDefaults.standard.object(forKey: "ImageCache") as? [String:String]
-       
          if dict == nil{
             dict = [String:String]()
         }
          
         dict![urlString] = path
         UserDefaults.standard.set(dict, forKey: "ImageCache")
-        
     }
     
-    /// downloads and returns a dictionary of UIImages? with their url being the key
-    func downloadAllImages(_ urls: [String], completion: @escaping ([UrlImageTuple]) -> ()) {
-        var images = [UrlImageTuple]()
-        
-        
-        for urlString in urls {
-           // let cacheKey = NSString(string: urlString)
-            
-            if let dict = UserDefaults.standard.object(forKey: "ImageCache") as? [String:String]{
-                if let path = dict[urlString]{
-                    if let data = try? Data(contentsOf: URL(fileURLWithPath: path)){
-                        let img = UIImage(data: data)
-                        images.append((urlString, img!))
-                        print("using cached image")
-                        completion(images)
-                        continue
-                    }
-                }
-            }
-
-            
-            guard let url = URL(string: urlString) else {
-                completion([])
-                return
-            }
-            
-            
-            let task = URLSession.shared.dataTask(with: url) { data, response, error in
-                guard let data = data, let image = UIImage(data: data) else {
-                    completion([])
-                    return
-                }
-                
-                //TODO: reduce imageQuality based on device width
-                let imageQuality: CGFloat = 2 // 2 is a good medium for smooth scrolling on both iPad and iPhone
-                let width = UIScreen.main.bounds.width * imageQuality
-               
-                // resize the image, resizing is needed to keep frame rate low while scrolling
-                let finalImage = image.resizeImage(toSize: CGSize(width: width, height: image.getHeightAspectRatio(withWidth: width)))
-                self.storeImage(urlString: urlString, img: finalImage)
-                images.append((urlString, finalImage))
-                completion(images)
-            }
-            
-            task.resume()
-        }
-
-    }
-   
-    
-    
+    // returns a result with a succesful image tuple (url, tuple)
     func downloadImage(_ urlString: String, completion: @escaping (Result<UrlImageTuple, NetworkError>) -> Void) {
             var returnImage: UrlImageTuple = ("" ,UIImage())
-        
+            // check to see if we have image saved in cache
             if let dict = UserDefaults.standard.object(forKey: "ImageCache") as? [String:String]{
                 if let path = dict[urlString]{
+                    // unwrap the data
                     if let data = try? Data(contentsOf: URL(fileURLWithPath: path)){
                         returnImage = (urlString, UIImage(data: data)!)
-                        print("downloadImage(): using cached image")
                         completion(.success(returnImage))
+                        return
                     }
                 }
             }
 
-            
             guard let url = URL(string: urlString) else {
                 completion(.failure(.invalidURL))
                 return
             }
             
-            
+            // do our network call
             let task = URLSession.shared.dataTask(with: url) { data, response, error in
                 guard let data = data, let image = UIImage(data: data) else {
                     completion(.failure(.invalidData))
@@ -171,12 +115,34 @@ class NetworkManager{
                 let finalImage = image.resizeImage(toSize: CGSize(width: width, height: image.getHeightAspectRatio(withWidth: width)))
                 self.storeImage(urlString: urlString, img: finalImage)
                 returnImage = (urlString, finalImage)
+
                 completion(.success(returnImage))
             }
             
             task.resume()
-        
-        
+    }
+    
+    // downloads multiple images at once
+    func downloadMultipleImages(_ urls: [String], completion:  @escaping (UrlImageTuple) -> ()){
+        // create an operation queue
+        let operationQueue = OperationQueue()
+        operationQueue.maxConcurrentOperationCount = maxDownloadThreads
+        for url in urls{
+            // add block operations, each one downoads an image to our queue
+            let operation = BlockOperation()
+            operation.addExecutionBlock {
+                self.downloadImage(url, completion: { result in
+                    switch result{
+                    case .success(let tuple):
+                        let result: UrlImageTuple = ( tuple.url, tuple.image)
+                        completion(result)
+                    case.failure(_):
+                        print("error")
+                        }
+                    })
+               }
+                operationQueue.addOperation(operation)
+        }
     }
     
         

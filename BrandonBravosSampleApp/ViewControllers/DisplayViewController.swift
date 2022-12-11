@@ -9,7 +9,6 @@ import UIKit
 
 class DisplayViewController: UIViewController {
 
-   
     lazy var collectionView: UICollectionView = {
          let layout = UICollectionViewFlowLayout()
          layout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 20, right: 10)
@@ -21,7 +20,7 @@ class DisplayViewController: UIViewController {
          return cv
      }()
      
-    private var viewModel = DisplayViewModel()
+    private var viewModel: DisplayViewModel!
     
     // image view of the users avatar
     private let profileImageView = UIImageView()
@@ -33,7 +32,7 @@ class DisplayViewController: UIViewController {
     private let transitionImage = UIImageView()
 
     init(withUser user: Profile){
-        self.viewModel.setUser(user: user)
+        self.viewModel = DisplayViewModel(user: user)
         super.init(nibName: nil, bundle: nil)
         setUpView()
         
@@ -46,8 +45,6 @@ class DisplayViewController: UIViewController {
                 self?.collectionView.reloadData()
             }
         }
-        
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -111,9 +108,6 @@ class DisplayViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-  
-
 }
 
 // MARK: Delegate
@@ -175,7 +169,7 @@ extension DisplayViewController: UICollectionViewDelegate, UICollectionViewDataS
             cell.imageView.image = viewModel.getProductImage(withIndex: indexPath)
             cell.imageView.layer.borderColor = UIColor.darkGray.cgColor
             cell.imageView.layer.cornerRadius = 15
-            cell.imageView.layer.borderWidth = 1
+            cell.imageView.layer.borderWidth = 0.5
         }
         
         return cell
