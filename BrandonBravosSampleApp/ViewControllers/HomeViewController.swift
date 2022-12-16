@@ -48,6 +48,22 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         return viewModel.getCount()
     }
     
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+       let contentOffsetX = scrollView.contentOffset.y
+       if contentOffsetX >= (scrollView.contentSize.height - scrollView.bounds.height) - 20 /* Needed offset */ {
+           guard !viewModel.isLoading  && viewModel.getCount() > viewModel.profileArray.count - 5 else { return }
+           viewModel.isLoading = true
+           print("Load More Data")
+           // load more data
+           viewModel.getPostData { [weak self] in
+               DispatchQueue.main.async {
+                   self?.collectionView.reloadData()
+               }
+           }
+           // than set self.isLoading to false when new data is loaded
+       }
+   }
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as! LtkImageCell
         let globalPoint = cell.imageView.superview?.convert( cell.imageView.frame.origin, to: nil)
@@ -74,7 +90,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LtkImageCell.reuseIdentifier, for: indexPath) as! LtkImageCell
-        cell.imageView.image = viewModel.getUser(withIndex: indexPath).ltks.heroImage
+        cell.imageView.image = viewModel.getUser(withIndex: indexPath).ltks.first!.heroImage
         return cell
         
     }

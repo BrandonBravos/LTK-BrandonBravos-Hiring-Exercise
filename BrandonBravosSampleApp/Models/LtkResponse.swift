@@ -9,8 +9,9 @@ import Foundation
 
 class LtkResponse: Decodable{
     var profiles: [Profile]
-    var ltks: [LtkPost]
-    var products: [Product] 
+    var ltks: [LtkPost] 
+    var products: [Product]
+    var meta: ResponseMeta
     
 
     /// creates an array of user profiles from the network call
@@ -41,7 +42,7 @@ class LtkResponse: Decodable{
             }
             
             // add the ltk to our profile object
-            profile?.ltks = ltk
+            profile?.ltks.append(ltk)
         }
         
         return  profiles.compactMap { profileDic[$0.id] }

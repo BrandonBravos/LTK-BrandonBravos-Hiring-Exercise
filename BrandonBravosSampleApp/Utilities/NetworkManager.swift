@@ -19,14 +19,15 @@ class NetworkManager{
     
     /// the shared instance of this Network manager
     static let shared = NetworkManager()
-    private let apiURL = "https://api-gateway.rewardstyle.com/api/ltk/v2/ltks/?featured=true&limit=20"
 
     // the maximum amount of images we want to download at once.
-    private let maxDownloadThreads = 4
+    private let maxDownloadThreads = 2
     
     /// gets LTKS, Profiles and Products.
-    func fetchData(completed: @escaping NetworkResult){
-        guard let url = URL(string: apiURL) else {
+    func fetchData(withUrl urlStr:String, completed: @escaping NetworkResult){
+        print("NetworkManager: Started")
+
+        guard let url = URL(string: urlStr) else {
             completed(.failure(.invalidURL))
             return
         }
@@ -34,16 +35,19 @@ class NetworkManager{
         let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
             if let _ =  error {
                 completed(.failure(.unableToComplete))
+                print("NetworkManager: Error")
                 return
             }
                         
             guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
                 completed(.failure(.invalidResponse))
+                print("NetworkManager: Invalid Response")
                 return
             }
             
             guard let data = data else {
                 completed(.failure(.invalidData))
+                print("NetworkManager: Invalid Data")
                 return
             }
             
@@ -51,8 +55,11 @@ class NetworkManager{
                // self.printJsonData(with: data)  // used for debugging
                 let decoder = JSONDecoder()
                 let decodedResponse = try decoder.decode(LtkResponse.self, from: data)
-                completed(.success(decodedResponse.createProfiles()))
+                completed(.success((decodedResponse.meta, decodedResponse.createProfiles())))
+                print("NetworkManager: completed")
+
             } catch {
+                print("NetworkManager: UnableToDecode")
                 completed(.failure(.invalidData))
             }
         }

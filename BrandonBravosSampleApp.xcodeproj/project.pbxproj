@@ -31,7 +31,13 @@
 		A16C821E2940508300E749FD /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A16C821A2940508300E749FD /* Montserrat-Regular.ttf */; };
 		A16C82212940542700E749FD /* DiscoverLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16C82202940542700E749FD /* DiscoverLayout.swift */; };
 		A16C82232941731A00E749FD /* DisplayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16C82222941731A00E749FD /* DisplayViewModel.swift */; };
-		A1995A072941D9020053052D /* ShopThePicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1995A062941D9020053052D /* ShopThePicView.swift */; };
+		A1801480294A5DEF00CD819A /* WaterfallLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180147F294A5DEF00CD819A /* WaterfallLayout.swift */; };
+		A1801488294A76FA00CD819A /* BlankReusableCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1801487294A76FA00CD819A /* BlankReusableCollectionView.swift */; };
+		A180148A294A774700CD819A /* BlankCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1801489294A774700CD819A /* BlankCollectionViewCell.swift */; };
+		A180148C294B103900CD819A /* UserFollowBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180148B294B103900CD819A /* UserFollowBarView.swift */; };
+		A180148F294D16B300CD819A /* ShopThePicHeaderReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180148E294D16B300CD819A /* ShopThePicHeaderReusableView.swift */; };
+		A1801491294D25F500CD819A /* ResponseMeta.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1801490294D25F500CD819A /* ResponseMeta.swift */; };
+		A1995A072941D9020053052D /* MoreFromUserReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1995A062941D9020053052D /* MoreFromUserReusableView.swift */; };
 		A1995A092941E4FC0053052D /* NavigationMenuBaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1995A082941E4FC0053052D /* NavigationMenuBaseController.swift */; };
 		A1995A0B2941E5350053052D /* CustomTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1995A0A2941E5350053052D /* CustomTabBarView.swift */; };
 		A1995A0F2941E5A30053052D /* BlankViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1995A0E2941E5A20053052D /* BlankViewController.swift */; };
@@ -64,7 +70,13 @@
 		A16C821A2940508300E749FD /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.ttf"; sourceTree = "<group>"; };
 		A16C82202940542700E749FD /* DiscoverLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverLayout.swift; sourceTree = "<group>"; };
 		A16C82222941731A00E749FD /* DisplayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayViewModel.swift; sourceTree = "<group>"; };
-		A1995A062941D9020053052D /* ShopThePicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopThePicView.swift; sourceTree = "<group>"; };
+		A180147F294A5DEF00CD819A /* WaterfallLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaterfallLayout.swift; sourceTree = "<group>"; };
+		A1801487294A76FA00CD819A /* BlankReusableCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlankReusableCollectionView.swift; sourceTree = "<group>"; };
+		A1801489294A774700CD819A /* BlankCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlankCollectionViewCell.swift; sourceTree = "<group>"; };
+		A180148B294B103900CD819A /* UserFollowBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserFollowBarView.swift; sourceTree = "<group>"; };
+		A180148E294D16B300CD819A /* ShopThePicHeaderReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopThePicHeaderReusableView.swift; sourceTree = "<group>"; };
+		A1801490294D25F500CD819A /* ResponseMeta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseMeta.swift; sourceTree = "<group>"; };
+		A1995A062941D9020053052D /* MoreFromUserReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreFromUserReusableView.swift; sourceTree = "<group>"; };
 		A1995A082941E4FC0053052D /* NavigationMenuBaseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationMenuBaseController.swift; sourceTree = "<group>"; };
 		A1995A0A2941E5350053052D /* CustomTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarView.swift; sourceTree = "<group>"; };
 		A1995A0E2941E5A20053052D /* BlankViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlankViewController.swift; sourceTree = "<group>"; };
@@ -153,6 +165,7 @@
 				A16C81ED293F307E00E749FD /* Profile.swift */,
 				A16C81F3293F30F100E749FD /* LtkPost.swift */,
 				A16C81EF293F30A400E749FD /* Product.swift */,
+				A1801490294D25F500CD819A /* ResponseMeta.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -160,8 +173,9 @@
 		A16C81F7293F370700E749FD /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				A180148D294D113E00CD819A /* ReusableCollectionViews */,
 				A16C81F8293F373000E749FD /* LtkImageCell.swift */,
-				A1995A062941D9020053052D /* ShopThePicView.swift */,
+				A1801489294A774700CD819A /* BlankCollectionViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -182,6 +196,7 @@
 				A16C821229404F1700E749FD /* HeaderSearchLabelView.swift */,
 				A16C821429404F6500E749FD /* SearchView.swift */,
 				A1995A0A2941E5350053052D /* CustomTabBarView.swift */,
+				A180148B294B103900CD819A /* UserFollowBarView.swift */,
 			);
 			path = CustomViews;
 			sourceTree = "<group>";
@@ -200,9 +215,20 @@
 		A16C821F294053E800E749FD /* CustomLayouts */ = {
 			isa = PBXGroup;
 			children = (
+				A180147F294A5DEF00CD819A /* WaterfallLayout.swift */,
 				A16C82202940542700E749FD /* DiscoverLayout.swift */,
 			);
 			path = CustomLayouts;
+			sourceTree = "<group>";
+		};
+		A180148D294D113E00CD819A /* ReusableCollectionViews */ = {
+			isa = PBXGroup;
+			children = (
+				A1995A062941D9020053052D /* MoreFromUserReusableView.swift */,
+				A180148E294D16B300CD819A /* ShopThePicHeaderReusableView.swift */,
+				A1801487294A76FA00CD819A /* BlankReusableCollectionView.swift */,
+			);
+			path = ReusableCollectionViews;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -279,6 +305,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1801488294A76FA00CD819A /* BlankReusableCollectionView.swift in Sources */,
 				A16C81EE293F307E00E749FD /* Profile.swift in Sources */,
 				A16C81D2293E932400E749FD /* HomeViewController.swift in Sources */,
 				A16C81F6293F352900E749FD /* HomeViewModel.swift in Sources */,
@@ -290,14 +317,19 @@
 				A16C81FC293FE27000E749FD /* Extensions.swift in Sources */,
 				A16C8211294049DE00E749FD /* LtkLoadIndicator.swift in Sources */,
 				A16C821529404F6500E749FD /* SearchView.swift in Sources */,
+				A1801491294D25F500CD819A /* ResponseMeta.swift in Sources */,
+				A180148F294D16B300CD819A /* ShopThePicHeaderReusableView.swift in Sources */,
 				A16C81D0293E932400E749FD /* SceneDelegate.swift in Sources */,
 				A16C821329404F1700E749FD /* HeaderSearchLabelView.swift in Sources */,
+				A180148C294B103900CD819A /* UserFollowBarView.swift in Sources */,
 				A16C81F4293F30F100E749FD /* LtkPost.swift in Sources */,
 				A16C82002940178700E749FD /* DisplayViewController.swift in Sources */,
 				A16C82232941731A00E749FD /* DisplayViewModel.swift in Sources */,
 				A16C81F0293F30A400E749FD /* Product.swift in Sources */,
+				A1801480294A5DEF00CD819A /* WaterfallLayout.swift in Sources */,
+				A180148A294A774700CD819A /* BlankCollectionViewCell.swift in Sources */,
 				A16C82212940542700E749FD /* DiscoverLayout.swift in Sources */,
-				A1995A072941D9020053052D /* ShopThePicView.swift in Sources */,
+				A1995A072941D9020053052D /* MoreFromUserReusableView.swift in Sources */,
 				A1995A0F2941E5A30053052D /* BlankViewController.swift in Sources */,
 				A1995A0B2941E5350053052D /* CustomTabBarView.swift in Sources */,
 				A16C81D8293E932400E749FD /* BrandonBravosSampleApp.xcdatamodeld in Sources */,

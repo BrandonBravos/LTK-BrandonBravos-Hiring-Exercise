@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 
 typealias UrlImageTuple = (url: String, image: UIImage)
-typealias NetworkResult = (Result<[Profile], NetworkError>)->()
+typealias NetworkResult = (Result<(meta: ResponseMeta, profiles:[Profile]), NetworkError>)->()
 typealias ProfileIdString = String
 typealias ProductIdString = String
 typealias PostImageUrlString = String

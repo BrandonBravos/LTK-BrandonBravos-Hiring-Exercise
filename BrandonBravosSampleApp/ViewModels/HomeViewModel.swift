@@ -9,7 +9,12 @@ import UIKit
 
 class HomeViewModel{
     // an array of our profiles
-    private var profileArray = [Profile]()
+    
+    var metaData: ResponseMeta?
+    
+    public var isLoading = false
+    
+     var profileArray = [Profile]()
 
     // an array of posts that have loaded
     private var loadedPostsArray = [Profile]()
@@ -17,9 +22,13 @@ class HomeViewModel{
     // a dictionary used to get profiles by post url image
     private var fetchUserDic = [PostImageUrlString : Profile] ()
     
+    // the api to get our featured
+    private let apiURL = "https://api-gateway.rewardstyle.com/api/ltk/v2/ltks/?featured=true&limit=10"
+    
+    
     /// returns an image in a list of loaded images
     func getImage(withIndex indexPath: IndexPath) -> UIImage?{
-        return loadedPostsArray[indexPath.row].ltks.heroImage
+        return loadedPostsArray[indexPath.row].ltks.first!.heroImage
     }
     
     /// returns the count of our images
@@ -35,17 +44,17 @@ class HomeViewModel{
     // creates a dictionary for fetching user with post image url
     private func createUserFetchDic(){
         for profile in profileArray{
-            guard let post = profile.ltks else{
+            guard let post = profile.ltks.first else{
                 return
             }
-            fetchUserDic[ post.heroImageUrl] = profile
+            fetchUserDic[post.heroImageUrl] = profile
         }
     }
     
     func downloadPostImages(completion: @escaping ()->Void){
-        NetworkManager.shared.downloadMultipleImages(profileArray.map{$0.ltks!.heroImageUrl}, completion: { test in
+        NetworkManager.shared.downloadMultipleImages(profileArray.map{$0.ltks.first!.heroImageUrl}, completion: { test in
             let user = self.fetchUserDic[test.url]!
-            user.ltks.heroImage = test.image
+            user.ltks.first!.heroImage = test.image
             user.downloadImages()
             self.loadedPostsArray.append(user)
             completion()
@@ -54,11 +63,22 @@ class HomeViewModel{
     
     /// fetches for data,
     func getPostData(completion: @escaping ()->()){
-        NetworkManager.shared.fetchData{ [weak self] result in
+        isLoading = true
+        var url = apiURL
+        
+        if let meta = metaData{
+            url = meta.nextURL
+            print(url)
+        } else{ print("No meta") }
+        
+        NetworkManager.shared.fetchData(withUrl: url){ [weak self] result in
                 switch result{
                     case .success(let response):
-                        self?.profileArray = response
-                        self?.createUserFetchDic()
+                        print("\n \n Post Data Recieved! \n \n")
+                    self?.isLoading = false
+                    self?.profileArray = response.profiles
+                    self?.metaData = response.meta
+                    self?.createUserFetchDic()
                     self?.downloadPostImages{
                         completion()
                     }

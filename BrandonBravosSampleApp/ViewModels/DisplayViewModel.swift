@@ -28,7 +28,7 @@ class DisplayViewModel{
     
     init(user: Profile){
         self.user = user
-        self.products = user.ltks!.products
+        self.products = user.ltks.first!.products
         for product in products{
             productLinkDic[product.imageUrl] = product
         }
@@ -41,7 +41,7 @@ class DisplayViewModel{
             return
         }
         
-        guard let post = user.ltks else{
+        guard let post = user.ltks.first else{
             print("Unable to find post")
             return
         }

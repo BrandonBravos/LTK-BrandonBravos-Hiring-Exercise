@@ -9,17 +9,42 @@ import UIKit
 
 class DisplayViewController: UIViewController {
 
+    private enum DisplaySections: Int{
+        case postSection = 0, shopSection = 1, userSection = 2
+    }
+    
+    private let displaySections:[DisplaySections] = [.postSection,.shopSection,.userSection]
+    
+    
     lazy var collectionView: UICollectionView = {
-         let layout = UICollectionViewFlowLayout()
-         layout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 20, right: 10)
+        let layout = WaterfallLayout()
+        layout.delegate = self
+        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        layout.minimumLineSpacing = 8.0
+        layout.minimumInteritemSpacing = 8.0
+        layout.headerHeight = 80.0
          let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
          cv.delegate = self
          cv.dataSource = self
-         cv.register(ShopThePicView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ShopThePicView.reuseIdentifier)
+         cv.register(MoreFromUserReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MoreFromUserReusableView.reuseIdentifier)
         cv.register(LtkImageCell.self, forCellWithReuseIdentifier: LtkImageCell.reuseIdentifier)
          return cv
      }()
-     
+    
+//    lazy var collectionView: UICollectionView = {
+//        let layout = WaterfallLayout()
+//        layout.delegate = self
+//        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+//        layout.minimumLineSpacing = 8.0
+//        layout.minimumInteritemSpacing = 8.0
+//        layout.headerHeight = 80.0
+//        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+//        cv.delegate = self
+//        cv.dataSource = self
+//        return cv
+//    }()
+    
+    
     private var viewModel: DisplayViewModel!
     
     // image view of the users avatar
@@ -31,6 +56,8 @@ class DisplayViewController: UIViewController {
     // an image that translates from over an image to our post image
     private let transitionImage = UIImageView()
 
+    let profileBar = UserFollowBarView()
+
     init(withUser user: Profile){
         self.viewModel = DisplayViewModel(user: user)
         super.init(nibName: nil, bundle: nil)
@@ -38,10 +65,12 @@ class DisplayViewController: UIViewController {
         
     }
     
+    
+    
     override func viewDidLoad() {
         viewModel.fetchData { [weak self] in
             DispatchQueue.main.async {
-                self?.profileImageView.image = self?.viewModel.getProfilePicture()
+                self?.profileBar.setProfileImage(self?.viewModel.getProfilePicture())
                 self?.collectionView.reloadData()
             }
         }
@@ -115,10 +144,19 @@ extension DisplayViewController: UICollectionViewDelegate, UICollectionViewDataS
    
     // add our supplementary header view
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let view = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ShopThePicView.reuseIdentifier, for: indexPath) as! ShopThePicView
-        if indexPath.section == 1{ view.config() }
-        
-        return view
+        let blankView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: BlankReusableCollectionView.reuseIdentifier, for: indexPath) as! BlankReusableCollectionView
+         
+        switch displaySections[indexPath.section] {
+        case .postSection:
+            return blankView
+        case .shopSection:
+            let shopThePicView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ShopThePicHeaderReusableView.reuseIdentifier, for: indexPath) as! ShopThePicHeaderReusableView
+            return shopThePicView
+        case .userSection:
+            let moreFromUserView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MoreFromUserReusableView.reuseIdentifier, for: indexPath) as! MoreFromUserReusableView
+            moreFromUserView.configure(withUserName: viewModel.getUser().displayName, withProfileImage: viewModel.getProfilePicture())
+            return moreFromUserView
+        }
     }
     
     // on press open safari
@@ -130,56 +168,87 @@ extension DisplayViewController: UICollectionViewDelegate, UICollectionViewDataS
         }
     }
     
-    // hide our supplementary view if not in section 0
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        let height = section == 1 ? 55.0 : 0.0
-        return CGSize(width: UIScreen.main.bounds.width, height: height)
-    }
-    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = UIScreen.main.bounds.width
-        
-        if indexPath.section == 0{
-            let height = viewModel.getPostImage().getHeightAspectRatio(withWidth: width)
-            
-            return CGSize(width: width - 20, height: height)
-        } else {
-            return CGSize(width: 80, height: 80)
 
-        }
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return displaySections.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let numberOfItems = section == 0 ? 1 : viewModel.getCount()
-        return numberOfItems
+        if section > displaySections.count { return 0}
+        switch displaySections[section]{
+        case .postSection: return 1
+        case .shopSection: return viewModel.getCount()
+        case .userSection: return viewModel.getUser().ltks.count
+        }
     }
+  
     
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LtkImageCell.reuseIdentifier, for: indexPath) as! LtkImageCell
-
-        if indexPath.section == 0{
-            cell.imageView.image = viewModel.getPostImage()
-            cell.imageView.layer.borderWidth = 0
-        }else{
-            cell.imageView.image = viewModel.getProductImage(withIndex: indexPath)
-            cell.imageView.layer.borderColor = UIColor.darkGray.cgColor
-            cell.imageView.layer.cornerRadius = 15
-            cell.imageView.layer.borderWidth = 0.5
+        switch displaySections[indexPath.section]{
+            
+        case .postSection:
+            let postCell = collectionView.dequeueReusableCell(withReuseIdentifier: LtkImageCell.reuseIdentifier, for: indexPath) as! LtkImageCell
+            postCell.setImageView(viewModel.getPostImage())
+            postCell.imageView.layer.borderWidth = 0
+            return postCell
+            
+        case .shopSection:
+            let shopCell = collectionView.dequeueReusableCell(withReuseIdentifier: LtkImageCell.reuseIdentifier, for: indexPath) as! LtkImageCell
+            shopCell.setImageView(viewModel.getProductImage(withIndex: indexPath))
+            shopCell.imageView.layer.borderWidth = 0.35
+            shopCell.imageView.layer.borderColor = UIColor.lightGray.cgColor
+            return shopCell
+            
+        case .userSection:
+            let userCell = collectionView.dequeueReusableCell(withReuseIdentifier: LtkImageCell.reuseIdentifier, for: indexPath) as! LtkImageCell
+            userCell.setImageView(viewModel.getPostImage())
+            return userCell
         }
-        
-        return cell
-    }
-        
-        
     
+    }
 }
 
-
+extension DisplayViewController: WaterfallLayoutDelegate{
+    func collectionViewLayout(for section: Int) -> WaterfallLayout.Layout {
+        let columnCount = 4
+        switch displaySections[section] {
+        case .postSection:
+            return .flow(column: 1)
+        case .shopSection:
+            return .flow(column: Int(columnCount))
+        case .userSection:
+            return .waterfall(column: 2, distributionMethod: .equal)
+        }
+    }
+    
+    
+    
+    func collectionView(_ collectionView: UICollectionView, layout: WaterfallLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let desiredScreenWidth = UIScreen.main.bounds.width - layout.sectionInset.left - layout.sectionInset.right
+        
+        // noticed a strange correlation with width and height, if you set height to 80, height is multiplied by 5
+        switch displaySections[indexPath.section] {
+        case .postSection:
+            return CGSize(width: 80, height: viewModel.getPostImage().getHeightAspectRatio(withWidth: desiredScreenWidth)/5)
+        case .shopSection:
+            return CGSize(width: 80, height: (UIScreen.main.bounds.width - 20) / 5)
+        case .userSection:
+            return CGSize(width: 80, height: (viewModel.getUser().ltks[indexPath.row].heroImage?.getHeightAspectRatio(withWidth: desiredScreenWidth))!/5)
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout: WaterfallLayout, headerHeightFor section: Int) -> CGFloat? {
+        switch displaySections[section] {
+        case .postSection:
+            return 0
+        case .shopSection:
+            return 80
+        case .userSection:
+            return 200
+        }
+    }
+}
 
 
 
@@ -207,7 +276,7 @@ extension DisplayViewController{
         
         let profileBarHeight: CGFloat = 55.0
         
-        let profileBar = UIView()
+        profileBar.setUsername(viewModel.getUser().displayName)
         profileBar.backgroundColor = .lightGray
         view.addSubview(profileBar)
         profileBar.translatesAutoresizingMaskIntoConstraints = false
@@ -218,33 +287,13 @@ extension DisplayViewController{
             profileBar.heightAnchor.constraint(equalToConstant: profileBarHeight )
         ])
         
-        profileImageView.clipsToBounds = true
-        profileImageView.layer.cornerRadius = (profileBarHeight - 10) / 2
-        profileImageView.image = viewModel.getProfilePicture()
-         profileBar.addSubview(profileImageView)
-        profileImageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            profileImageView.centerYAnchor.constraint(equalTo: profileBar.centerYAnchor),
-            profileImageView.leadingAnchor.constraint(equalTo: profileBar.leadingAnchor, constant: 15),
-            profileImageView.widthAnchor.constraint(equalToConstant: profileBarHeight - 10),
-            profileImageView.heightAnchor.constraint(equalToConstant: profileBarHeight - 10),
-
-        ])
-        
-        let profileUserTextLabel = UILabel()
-        profileUserTextLabel.font = UIFont.montserratFont(withMontserrat: .medium, withSize: 15)
-        profileUserTextLabel.text = viewModel.getUser().displayName
-        profileBar.addSubview(profileUserTextLabel)
-        profileUserTextLabel.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            profileUserTextLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 15),
-            profileUserTextLabel.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor),
-            profileUserTextLabel.heightAnchor.constraint(equalToConstant: profileBarHeight),
-            profileUserTextLabel.widthAnchor.constraint(equalToConstant: 150)
-        ])
-        
-        
+    
         view.addSubview(collectionView)
+        collectionView.register(BlankReusableCollectionView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: BlankReusableCollectionView.reuseIdentifier)
+        collectionView.register(ShopThePicHeaderReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ShopThePicHeaderReusableView.reuseIdentifier)
+        collectionView.register(MoreFromUserReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MoreFromUserReusableView.reuseIdentifier)
+
+        collectionView.register(BlankCollectionViewCell.self, forCellWithReuseIdentifier: BlankCollectionViewCell.reuseIdentifier)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: profileBar.bottomAnchor),

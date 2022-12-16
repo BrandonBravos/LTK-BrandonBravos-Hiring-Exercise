@@ -10,7 +10,7 @@ import UIKit
 class Profile: Decodable, HasDownloadableImages{
 
     /// an array of user posts
-    var ltks: LtkPost!
+    var ltks: [LtkPost] = []
     
     /// the UIImage? heroImage object.
     var profileImage:UIImage?

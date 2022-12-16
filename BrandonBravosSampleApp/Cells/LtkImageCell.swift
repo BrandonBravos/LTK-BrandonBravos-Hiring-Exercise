@@ -17,6 +17,15 @@ class LtkImageCell: UICollectionViewCell{
     override init(frame: CGRect) {
         super.init(frame: frame)
         animateFadeIn()
+      
+    }
+    
+    public func setImageView(_ image: UIImage?){
+        guard let image = image else {
+            return
+        }
+        imageView.image = image
+        
     }
     
     required init?(coder: NSCoder) {
@@ -31,8 +40,7 @@ class LtkImageCell: UICollectionViewCell{
     }
     
     override func layoutSubviews() {
-        imageView.frame = frame
-        imageView.backgroundColor = .systemPink
+        //imageView.backgroundColor = .systemPink
         imageView.layer.cornerRadius = 15
         imageView.clipsToBounds = true
         self.addSubview(imageView)
