@@ -12,7 +12,7 @@ class ResponseMeta: Decodable{
     var numberOfResults: Int
     var totalResults: Int
     var limit: Int
-    var nextURL: String
+    var nextURL: String?
     
     //  convert API's snake case to iOS camel case
     private enum CodingKeys : String, CodingKey {

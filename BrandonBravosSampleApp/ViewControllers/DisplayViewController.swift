@@ -9,12 +9,12 @@ import UIKit
 
 class DisplayViewController: UIViewController {
 
+    // the sections we want to display and their assoicated indexPath.section
     private enum DisplaySections: Int{
         case postSection = 0, shopSection = 1, userSection = 2
     }
     
     private let displaySections:[DisplaySections] = [.postSection,.shopSection,.userSection]
-    
     
     lazy var collectionView: UICollectionView = {
         let layout = WaterfallLayout()
@@ -31,20 +31,6 @@ class DisplayViewController: UIViewController {
          return cv
      }()
     
-//    lazy var collectionView: UICollectionView = {
-//        let layout = WaterfallLayout()
-//        layout.delegate = self
-//        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-//        layout.minimumLineSpacing = 8.0
-//        layout.minimumInteritemSpacing = 8.0
-//        layout.headerHeight = 80.0
-//        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-//        cv.delegate = self
-//        cv.dataSource = self
-//        return cv
-//    }()
-    
-    
     private var viewModel: DisplayViewModel!
     
     // image view of the users avatar
@@ -58,20 +44,24 @@ class DisplayViewController: UIViewController {
 
     let profileBar = UserFollowBarView()
 
-    init(withUser user: Profile){
-        self.viewModel = DisplayViewModel(user: user)
+    init(withUser user: Profile, withLtk ltk: LtkPost){
+        self.viewModel = DisplayViewModel(user: user, ltk: ltk)
         super.init(nibName: nil, bundle: nil)
         setUpView()
         
     }
     
-    
-    
     override func viewDidLoad() {
-        viewModel.fetchData { [weak self] in
+        viewModel.fetchProductData { [weak self] in
             DispatchQueue.main.async {
                 self?.profileBar.setProfileImage(self?.viewModel.getProfilePicture())
                 self?.collectionView.reloadData()
+            }
+        }
+        
+        viewModel.getUserPostData {[weak self] in
+            DispatchQueue.main.async {
+            self?.collectionView.reloadData()
             }
         }
     }
@@ -80,21 +70,13 @@ class DisplayViewController: UIViewController {
         beginTranslationAnimation()
     }
     
-    
     // starts the transitional animation. Animates our view from one end to hover over our post image
     private func beginTranslationAnimation(){
-        // this code perfectly aligns the view but doesnt work everytime
-        //        let cell = collectionView.cellForItem(at: IndexPath(row: 0, section: 0)) as! LtkImageCell
-        //        let center = cell.imageView.superview?.convert( cell.imageView.frame.origin, to: nil)
-        //        let frame = cell.imageView.frame
-
         UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseIn, animations: { [self] in
             self.transitionImage.layer.cornerRadius = 0
             self.view.backgroundColor = .white
             self.transitionImage.frame = CGRect(x: 6, y: 163, width: UIScreen.main.bounds.width - 12, height: self.viewModel.getPostImage().getHeightAspectRatio(withWidth:  UIScreen.main.bounds.width) - 20)
        
-            // self.transitionImage.frame = CGRect(x: center!.x, y: center!.y, width: frame.width, height: frame.height)
-
         }, completion: { _ in
            self.view.layoutIfNeeded()
            self.animateTransitionFadeIn()
@@ -126,6 +108,9 @@ class DisplayViewController: UIViewController {
         view.addSubview(transitionImage)
     }
     
+    private func displayNewPost(){
+        
+    }
     
     // remove the view
    @objc private func backButtonTapped(){
@@ -161,14 +146,54 @@ extension DisplayViewController: UICollectionViewDelegate, UICollectionViewDataS
     
     // on press open safari
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.section == 1{
+        switch displaySections[indexPath.section] {
+        case .postSection:
+            return
+            
+        case .shopSection:
             if let url = URL(string: viewModel.getProductUrl(withIndexPath: indexPath)!) {
                 UIApplication.shared.open(url)
             }
+        case .userSection:
+            let cell = collectionView.cellForItem(at: indexPath) as! LtkImageCell
+            let globalPoint = cell.imageView.superview?.convert( cell.imageView.frame.origin, to: nil)
+            let image = cell.imageView.image!
+            let frame = cell.imageView.frame
+
+            let user = viewModel.getUser()
+            let vc = DisplayViewController(withUser: user, withLtk: user.ltks[indexPath.row])
+          
+            // render parent view in a UIImage
+                UIGraphicsBeginImageContext(self.view.bounds.size);
+                self.parent?.view.layer.render(in: UIGraphicsGetCurrentContext()!)
+                let viewImage = UIGraphicsGetImageFromCurrentImageContext();
+                UIGraphicsEndImageContext();
+
+                // add the image as background of the view
+            vc.view.insertSubview(UIImageView(image: viewImage), at: 0)
+            
+            // push the view controller
+            navigationController?.pushViewController(vc, animated: false)
+            vc.createTransitionAnimationImage(withImage: image, withCenter: globalPoint!, withFrame: frame)
+            
+            
+        return
         }
     }
-    
 
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+       let contentOffsetX = scrollView.contentOffset.y
+       if contentOffsetX >= (scrollView.contentSize.height - scrollView.bounds.height) - 20 /* Needed offset */ {
+           guard !viewModel.isLoading else { return }
+           viewModel.isLoading = true
+           viewModel.getUserPostData { [weak self] in
+               DispatchQueue.main.async {
+                   self?.collectionView.reloadData()
+               }
+           }
+       }
+   }
+    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return displaySections.count
     }
@@ -177,12 +202,11 @@ extension DisplayViewController: UICollectionViewDelegate, UICollectionViewDataS
         if section > displaySections.count { return 0}
         switch displaySections[section]{
         case .postSection: return 1
-        case .shopSection: return viewModel.getCount()
+        case .shopSection: return viewModel.getLoadedProductsCount()
         case .userSection: return viewModel.getUser().ltks.count
         }
     }
   
-    
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch displaySections[indexPath.section]{
@@ -202,7 +226,7 @@ extension DisplayViewController: UICollectionViewDelegate, UICollectionViewDataS
             
         case .userSection:
             let userCell = collectionView.dequeueReusableCell(withReuseIdentifier: LtkImageCell.reuseIdentifier, for: indexPath) as! LtkImageCell
-            userCell.setImageView(viewModel.getPostImage())
+            userCell.setImageView(viewModel.getUser().ltks[indexPath.row].heroImage)
             return userCell
         }
     
@@ -234,7 +258,7 @@ extension DisplayViewController: WaterfallLayoutDelegate{
         case .shopSection:
             return CGSize(width: 80, height: (UIScreen.main.bounds.width - 20) / 5)
         case .userSection:
-            return CGSize(width: 80, height: (viewModel.getUser().ltks[indexPath.row].heroImage?.getHeightAspectRatio(withWidth: desiredScreenWidth))!/5)
+            return CGSize(width: 80, height: (viewModel.getUser().ltks[indexPath.row].heroImage!.getHeightAspectRatio(withWidth: desiredScreenWidth))/5)
         }
     }
     
@@ -249,9 +273,6 @@ extension DisplayViewController: WaterfallLayoutDelegate{
         }
     }
 }
-
-
-
 
 // MARK: Layout
 extension DisplayViewController{
@@ -308,6 +329,4 @@ extension DisplayViewController{
         for view in animationViews{ view.alpha = 0 }
     }
 }
-
-
 

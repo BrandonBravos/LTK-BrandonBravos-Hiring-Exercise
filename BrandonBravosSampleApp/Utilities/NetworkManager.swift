@@ -25,7 +25,7 @@ class NetworkManager{
     
     /// gets LTKS, Profiles and Products.
     func fetchData(withUrl urlStr:String, completed: @escaping NetworkResult){
-        print("NetworkManager: Started")
+        //print("NetworkManager: Started")
 
         guard let url = URL(string: urlStr) else {
             completed(.failure(.invalidURL))
@@ -55,8 +55,8 @@ class NetworkManager{
                // self.printJsonData(with: data)  // used for debugging
                 let decoder = JSONDecoder()
                 let decodedResponse = try decoder.decode(LtkResponse.self, from: data)
-                completed(.success((decodedResponse.meta, decodedResponse.createProfiles())))
-                print("NetworkManager: completed")
+                completed(.success((decodedResponse.meta, decodedResponse.createFeaturedProfiles())))
+                //print("NetworkManager: completed")
 
             } catch {
                 print("NetworkManager: UnableToDecode")

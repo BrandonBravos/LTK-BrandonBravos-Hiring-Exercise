@@ -15,7 +15,7 @@ class LtkResponse: Decodable{
     
 
     /// creates an array of user profiles from the network call
-    func createProfiles() ->[Profile]{
+    func createFeaturedProfiles() ->[Profile]{
         
         // allows searching for profile with user id
         var profileDic: [ProfileIdString: Profile] = [:]
@@ -43,6 +43,9 @@ class LtkResponse: Decodable{
             
             // add the ltk to our profile object
             profile?.ltks.append(ltk)
+            
+            // here we add our post to our users post dictionary store
+            profile?.ltksDicStore[ltk.heroImageUrl] = ltk
         }
         
         return  profiles.compactMap { profileDic[$0.id] }

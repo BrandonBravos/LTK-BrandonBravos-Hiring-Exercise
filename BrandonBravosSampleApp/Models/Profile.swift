@@ -9,8 +9,11 @@ import UIKit
 
 class Profile: Decodable, HasDownloadableImages{
 
-    /// an array of user posts
+    /// an array of user posts. Post should not be added unless their images have been loaded
     var ltks: [LtkPost] = []
+    
+    ///this is used to get a used to get a users post based on a url string.
+    var ltksDicStore: [PostImageUrlString:LtkPost] = [:]
     
     /// the UIImage? heroImage object.
     var profileImage:UIImage?

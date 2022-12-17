@@ -45,22 +45,20 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.getCount()
+        return viewModel.getLoadedPostsCount()
     }
     
+    // if we have neared the end ouf our scroll view, download more posts.
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
        let contentOffsetX = scrollView.contentOffset.y
        if contentOffsetX >= (scrollView.contentSize.height - scrollView.bounds.height) - 20 /* Needed offset */ {
-           guard !viewModel.isLoading  && viewModel.getCount() > viewModel.profileArray.count - 5 else { return }
+           guard !viewModel.isLoading  && viewModel.getLoadedPostsCount() > viewModel.profileArray.count - 5 else { return }
            viewModel.isLoading = true
-           print("Load More Data")
-           // load more data
            viewModel.getPostData { [weak self] in
                DispatchQueue.main.async {
                    self?.collectionView.reloadData()
                }
            }
-           // than set self.isLoading to false when new data is loaded
        }
    }
 
@@ -70,8 +68,8 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         let image = cell.imageView.image!
         let frame = cell.imageView.frame
 
-        
-        let vc = DisplayViewController(withUser: viewModel.getUser(withIndex: indexPath))
+        let user = viewModel.getUser(withIndex: indexPath)
+        let vc = DisplayViewController(withUser: user, withLtk: user.ltks.first!)
       
         // render parent view in a UIImage
             UIGraphicsBeginImageContext(self.view.bounds.size);
@@ -110,7 +108,7 @@ extension HomeViewController{
     
     func addViews(){
         view.backgroundColor = .white
-        
+
         let headearBarHeight: CGFloat = 45
         let headerView = HeaderSearchLabelView()
         headerView.backgroundColor = .white
