@@ -33,10 +33,10 @@ class LtkImageCell: UICollectionViewCell{
     }
     
     private func animateFadeIn(){
-        alpha = 0
-        UIView.animate(withDuration: 0.2, delay: 0,  options: .curveEaseIn, animations: {
-            self.alpha = 1
-        })
+//        alpha = 0
+//        UIView.animate(withDuration: 0.2, delay: 0,  options: .curveEaseIn, animations: {
+//            self.alpha = 1
+//        })
     }
     
     override func layoutSubviews() {

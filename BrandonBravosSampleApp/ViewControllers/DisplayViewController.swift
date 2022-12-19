@@ -54,7 +54,9 @@ class DisplayViewController: UIViewController {
     override func viewDidLoad() {
         viewModel.fetchProductData { [weak self] in
             DispatchQueue.main.async {
-                self?.profileBar.setProfileImage(self?.viewModel.getProfilePicture())
+                self?.viewModel.getUser().getProfileImage(completion: { result in
+                    self?.profileBar.setProfileImage(result)
+                })
                 self?.collectionView.reloadData()
             }
         }
@@ -75,8 +77,8 @@ class DisplayViewController: UIViewController {
         UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseIn, animations: { [self] in
             self.transitionImage.layer.cornerRadius = 0
             self.view.backgroundColor = .white
-            self.transitionImage.frame = CGRect(x: 6, y: 163, width: UIScreen.main.bounds.width - 12, height: self.viewModel.getPostImage().getHeightAspectRatio(withWidth:  UIScreen.main.bounds.width) - 20)
-       
+            self.transitionImage.frame = CGRect(x: 6, y: 163, width: UIScreen.main.bounds.width - 12, height: self.viewModel.ltk.getHeightAspectRatio(withWidth:  UIScreen.main.bounds.width) - 20)
+      
         }, completion: { _ in
            self.view.layoutIfNeeded()
            self.animateTransitionFadeIn()
@@ -108,10 +110,6 @@ class DisplayViewController: UIViewController {
         view.addSubview(transitionImage)
     }
     
-    private func displayNewPost(){
-        
-    }
-    
     // remove the view
    @objc private func backButtonTapped(){
         self.modalTransitionStyle = .crossDissolve
@@ -139,7 +137,10 @@ extension DisplayViewController: UICollectionViewDelegate, UICollectionViewDataS
             return shopThePicView
         case .userSection:
             let moreFromUserView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MoreFromUserReusableView.reuseIdentifier, for: indexPath) as! MoreFromUserReusableView
-            moreFromUserView.configure(withUserName: viewModel.getUser().displayName, withProfileImage: viewModel.getProfilePicture())
+            viewModel.getProfilePicture{result in
+                moreFromUserView.configure(withUserName: self.viewModel.getUser().displayName, withProfileImage: result)
+
+            }
             return moreFromUserView
         }
     }
@@ -213,20 +214,27 @@ extension DisplayViewController: UICollectionViewDelegate, UICollectionViewDataS
             
         case .postSection:
             let postCell = collectionView.dequeueReusableCell(withReuseIdentifier: LtkImageCell.reuseIdentifier, for: indexPath) as! LtkImageCell
-            postCell.setImageView(viewModel.getPostImage())
+            viewModel.getPostImage{image in
+                postCell.setImageView(image)
+            }
             postCell.imageView.layer.borderWidth = 0
             return postCell
             
         case .shopSection:
             let shopCell = collectionView.dequeueReusableCell(withReuseIdentifier: LtkImageCell.reuseIdentifier, for: indexPath) as! LtkImageCell
-            shopCell.setImageView(viewModel.getProductImage(withIndex: indexPath))
+            viewModel.getProductImage(withIndex: indexPath){ image in
+                shopCell.setImageView(image)
+
+            }
             shopCell.imageView.layer.borderWidth = 0.35
             shopCell.imageView.layer.borderColor = UIColor.lightGray.cgColor
             return shopCell
             
         case .userSection:
             let userCell = collectionView.dequeueReusableCell(withReuseIdentifier: LtkImageCell.reuseIdentifier, for: indexPath) as! LtkImageCell
-            userCell.setImageView(viewModel.getUser().ltks[indexPath.row].heroImage)
+            viewModel.getUser().ltks[indexPath.row].getPostImage{ image in
+                userCell.setImageView(image)
+            }
             return userCell
         }
     
@@ -254,11 +262,11 @@ extension DisplayViewController: WaterfallLayoutDelegate{
         // noticed a strange correlation with width and height, if you set height to 80, height is multiplied by 5
         switch displaySections[indexPath.section] {
         case .postSection:
-            return CGSize(width: 80, height: viewModel.getPostImage().getHeightAspectRatio(withWidth: desiredScreenWidth)/5)
+            return CGSize(width: 80, height: viewModel.ltk.getHeightAspectRatio(withWidth: desiredScreenWidth)/5) 
         case .shopSection:
             return CGSize(width: 80, height: (UIScreen.main.bounds.width - 20) / 5)
         case .userSection:
-            return CGSize(width: 80, height: (viewModel.getUser().ltks[indexPath.row].heroImage!.getHeightAspectRatio(withWidth: desiredScreenWidth))/5)
+            return CGSize(width: 80, height: viewModel.getUser().ltks[indexPath.row].getHeightAspectRatio(withWidth: desiredScreenWidth)/5)
         }
     }
     
@@ -298,7 +306,8 @@ extension DisplayViewController{
         let profileBarHeight: CGFloat = 55.0
         
         profileBar.setUsername(viewModel.getUser().displayName)
-        profileBar.backgroundColor = .lightGray
+        profileBar.backgroundColor =  #colorLiteral(red: 0.9373, green: 0.9373, blue: 0.9373, alpha: 1) /* #efefef */
+
         view.addSubview(profileBar)
         profileBar.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

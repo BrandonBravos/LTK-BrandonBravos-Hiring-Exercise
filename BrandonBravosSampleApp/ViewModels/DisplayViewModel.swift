@@ -12,7 +12,7 @@ class DisplayViewModel{
     private var user: Profile!
     
     // the post that is being shared
-    private var ltk: LtkPost!
+    public var ltk: LtkPost!
     
     var metaData: ResponseMeta?
     public var isLoading = false
@@ -22,7 +22,7 @@ class DisplayViewModel{
     let apiUrlEndLimit = "&limit=10"
 
     // main media for currently displayed post
-    private var postPicture: UIImage = UIImage()
+    private var postPicture: UIImage? 
     
     // products related to this post
     private var products: [Product] = []
@@ -65,18 +65,25 @@ class DisplayViewModel{
             return
         }
        
-        self.profileImage = user.profileImage
-        self.postPicture = ltk.heroImage!
+         user.getProfileImage(completion: { result in
+             self.profileImage = result
+        })
+        
+        ltk.getPostImage{ image in
+            self.postPicture = image
+        }
    
         var productImageUrls = [String]()
         for product in products{ productImageUrls.append(product.imageUrl) }
         
         downloadProductImages(urls: productImageUrls){[weak self] result in
-            DispatchQueue.main.async {
+       
                 let product = self?.productLinkDic[result.url]
-                product?.productImage = result.image
-                self?.loadedProducts.append(product!)
-                completion()
+                product?.getProductImage{ image in
+                    DispatchQueue.main.async {
+                    self?.loadedProducts.append(product!)
+                    completion()
+                }
             }
         }
     }
@@ -103,7 +110,10 @@ class DisplayViewModel{
                     self?.createUserFetchDic()
 
                     var postImagesToDownload = [String]()
-                    for post in self!.loadedPostsArray{
+                    guard let postArray = self?.loadedPostsArray else{
+                        return
+                    }
+                    for post in postArray{
                         // if our user doesnt have this post, add it to our toDownload array
                         if self?.user.ltksDicStore[post.heroImageUrl] == nil{
                             postImagesToDownload.append(post.heroImageUrl)
@@ -111,17 +121,12 @@ class DisplayViewModel{
                     }
 
                     self?.downloadProductImages(urls: postImagesToDownload, completion: { response in
-                        // set the posts image
                         let post = self?.ltkLinkDic[response.url]
-                        post?.heroImage = response.image
-                        // add the post to our users loaded post
-                        self?.user.ltks.append(post!)
-                        
-                        // add the post to our users ltk dictionary storage
-                        self?.user.ltksDicStore[response.url] = post
-                        
-                       //  print("loadedLtks = \(self!.user.ltks.count) MaxPost: \(self!.metaData!.totalResults)")
-                        completion()
+                        post?.getPostImage{ image in
+                            self?.user.ltks.append(post!)
+                            self?.user.ltksDicStore[response.url] = post
+                            completion()
+                        }
                     })
                     
                 case.failure(let error):
@@ -151,16 +156,23 @@ class DisplayViewModel{
         return loadedProducts.count
     }
     
-    public func getProductImage(withIndex indexPath: IndexPath) -> UIImage{
-        return loadedProducts[indexPath.row].productImage ?? UIImage()
+    public func getProductImage(withIndex indexPath: IndexPath, completion: @escaping(UIImage?)->()){
+        loadedProducts[indexPath.row].getProductImage(completion: { image in
+            completion(image)
+        })
     }
     
-    public func getPostImage() -> UIImage{
-        return postPicture
+    public func getPostImage(completion: @escaping(UIImage?)->()){
+        ltk.getPostImage{ image in
+            completion(image)
+        }
     }
     
-    public func getProfilePicture ()-> UIImage?{
-        return user?.profileImage
+    public func getProfilePicture(completion: @escaping(UIImage?)->()){
+        user.getProfileImage(completion: { result in
+            return completion(result)
+        })
+        
     }
     
     public func getProductUrl(withIndexPath indexPath: IndexPath)-> String?{

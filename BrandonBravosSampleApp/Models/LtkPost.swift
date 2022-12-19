@@ -12,9 +12,19 @@ class LtkPost: Decodable{
     
     /// an array of posts related products
     var products: [Product] = []
-    
-    /// returns an [(url, uiimage)] of the posts main image
-    var heroImage: UIImage?
+
+    // used to calculate resizing our images on download
+        // since images are grabbed from cache, we save these to save on memory
+    var imageWidth: CGFloat?
+    var imageHeight: CGFloat?
+
+    /// used to resize an images height while keeping its aspect ratio
+    func getHeightAspectRatio(withWidth:CGFloat) -> CGFloat{
+        let ratio = imageHeight! / imageWidth!
+        let desiredWidth = withWidth
+        let newHeight = desiredWidth * ratio
+        return newHeight
+    }
     
     // MARK: Codable Data From Get Request
     /// url that returns post image
@@ -79,6 +89,22 @@ class LtkPost: Decodable{
                 shareUrl = "share_url",
                 productIds = "product_ids"
        }
+    
+    public func getPostImage(completion: @escaping(UIImage?)->()){
+        NetworkManager.shared.downloadImage(heroImageUrl, completion: { result in
+            switch result{
+            case.success(let img):
+                self.imageHeight = img.image.size.height
+                self.imageWidth = img.image.size.width
+
+                return completion(img.image)
+            case .failure(let err):
+                print("Unable to get profile image, Error: \(err)")
+                return completion(nil)
+            }
+            
+        })
+    }
 
 }
 
