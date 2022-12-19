@@ -21,7 +21,7 @@ class NetworkManager{
     static let shared = NetworkManager()
 
     // the maximum amount of images we want to download at once.
-    private let maxDownloadThreads = 2
+    private let maxDownloadThreads = 5
     
     /// gets LTKS, Profiles and Products.
     func fetchData(withUrl urlStr:String, completed: @escaping NetworkResult){
@@ -87,6 +87,7 @@ class NetworkManager{
         UserDefaults.standard.set(dict, forKey: "ImageCache")
     }
     
+    
     // returns a result with a succesful image tuple (url, tuple)
     func downloadImage(_ urlString: String, completion: @escaping (Result<UrlImageTuple, NetworkError>) -> Void) {
             var returnImage: UrlImageTuple = ("" ,UIImage())
@@ -115,7 +116,7 @@ class NetworkManager{
                 }
                 
                 //TODO: reduce imageQuality based on device width
-                let imageQuality: CGFloat = 2 // 2 is a good medium for smooth scrolling on both iPad and iPhone
+                let imageQuality: CGFloat = 1 // 2 is a good medium for smooth scrolling on both iPad and iPhone
                 let width = UIScreen.main.bounds.width * imageQuality
                
                 // resize the image, resizing is needed to keep frame rate low while scrolling

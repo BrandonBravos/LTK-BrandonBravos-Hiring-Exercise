@@ -1,13 +1,13 @@
 //
-//  DiscoverViewModel.swift
+//  ViewControllerViewModel.swift
 //  BrandonBravosSampleApp
 //
-//  Created by Brandon Bravos on 12/17/22.
+//  Created by Brandon Bravos on 12/7/22.
 //
 
 import UIKit
 
-class HomeViewModel{
+class DiscoveryViewModel{
 
     // the meta data assoicated with our network response
     var metaData: ResponseMeta?
@@ -19,21 +19,23 @@ class HomeViewModel{
     public var profileArray = [Profile]()
 
     // an array of users whos feature posts have loaded.
-    public var loadedPostsArray = [Profile]()
+    private var loadedPostsArray = [Profile]()
     
     // a dictionary used to get profiles by post url image.
     private var fetchUserDic = [PostImageUrlString : Profile] ()
     
     // the api to get our featured profiles and posts from
-    private let apiURL = "https://api-gateway.rewardstyle.com/api/ltk/v2/ltks/?featured=true&limit=5"
+    private let apiURL = "https://api-gateway.rewardstyle.com/api/ltk/v2/ltks/?featured=true&limit=10"
     
     
     /// returns an image in a list of loaded images
-    func getImage(withIndex indexPath: IndexPath, completion: @escaping(UIImage?)->()){
-        loadedPostsArray[indexPath.row].ltks.first!.getPostImage { image in
-            completion(image)
+    func getImage(withIndex indexPath: IndexPath, completion: @escaping (UIImage?)->CGFloat){
+        loadedPostsArray[indexPath.row].ltks.first!.getPostImage{ image in
+           _ = completion(image)
         }
     }
+    
+    
     
     /// returns the count of our images
     func getLoadedPostsCount() -> Int{
@@ -59,35 +61,15 @@ class HomeViewModel{
     func downloadPostImages(completion: @escaping ()->Void){
         NetworkManager.shared.downloadMultipleImages(profileArray.map{$0.ltks.first!.heroImageUrl}, completion: { test in
             let user = self.fetchUserDic[test.url]!
-            user.ltks.first!.getPostImage{ [self]image in
-                downloadProductImages(post: user.ltks.first!, completion: {
-                    DispatchQueue.main.async { [self] in
-                        self.loadedPostsArray.append(user)
-                        self.isLoading = false
-                        completion()
-                    
-                    }
-                })
+            user.ltks.first!.getPostImage{image in
+                self.loadedPostsArray.append(user)
+                completion()
             }
+          
         })
     }
     
-    // downloads our posts products, and only updates when all product images are loaded
-    private func downloadProductImages(post: LtkPost, completion: @escaping ()->()){
-        let count = post.products.count
-        var i = 0
-        for product in post.products {
-                product.getProductImage{ image in
-                    i += 1
-                    if i == count{
-                    completion()
-                    }
-                }
-            }
-        }
-    
-    
-    /// fetches for a list of featured users and their featured posts. only returns a fully loaded profile when the profiles featured post is loaded, along with its product images
+    /// fetches for a list of featured users and their featured posts.
     func getPostData(completion: @escaping ()->()){
         isLoading = true
         var url = apiURL
@@ -105,6 +87,7 @@ class HomeViewModel{
         NetworkManager.shared.fetchData(withUrl: url){ [weak self] result in
                 switch result{
                     case .success(let response):
+                    self?.isLoading = false
                     self?.profileArray = response.profiles
                     self?.metaData = response.meta
                     self?.createUserFetchDic()

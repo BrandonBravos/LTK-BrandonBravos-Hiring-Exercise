@@ -58,7 +58,7 @@ class LtkLoadIndicator: UIView {
         spinAnimation.valueFunction = CAValueFunction(name: CAValueFunctionName.rotateZ)
         spinAnimation.timingFunction = CAMediaTimingFunction(name: .linear)
         spinAnimation.duration = 0.2
-        spinAnimation.repeatCount = 100
+        spinAnimation.repeatCount = 1000
         spinAnimation.toValue = CGFloat.pi
 
   

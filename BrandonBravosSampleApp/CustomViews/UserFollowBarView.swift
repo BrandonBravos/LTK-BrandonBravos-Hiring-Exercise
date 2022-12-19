@@ -15,7 +15,6 @@ class UserFollowBarView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
-        
     }
     
     public func setUsername(_ usernameString: String){
@@ -32,7 +31,6 @@ class UserFollowBarView: UIView {
     
     
     override func layoutSubviews() {
-        backgroundColor = #colorLiteral(red: 0.9373, green: 0.9373, blue: 0.9373, alpha: 1) /* #efefef */
         profileImageView.clipsToBounds = true
         profileImageView.layer.cornerRadius = (profileBarHeight - 20) / 2
         addSubview(profileImageView)

@@ -17,12 +17,14 @@ class MoreFromUserReusableView: UICollectionReusableView{
     let profileImageView = UIImageView()
 
     func configure(withUserName username: String, withProfileImage image: UIImage?){
-        userNameLabel.text = username.uppercased()
+        DispatchQueue.main.async {
+            self.userNameLabel.text = username.uppercased()
         guard let image = image else {
             print("No profile image")
             return
         }
-        profileImageView.image = image
+            self.profileImageView.image = image
+        }
 
     }
     

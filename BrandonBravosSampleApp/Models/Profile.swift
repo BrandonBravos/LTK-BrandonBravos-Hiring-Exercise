@@ -7,7 +7,7 @@
 
 import UIKit
 
-class Profile: Decodable, HasDownloadableImages{
+class Profile: Decodable{
 
     /// an array of user posts. Post should not be added unless their images have been loaded
     var ltks: [LtkPost] = []
@@ -15,8 +15,7 @@ class Profile: Decodable, HasDownloadableImages{
     ///this is used to get a used to get a users post based on a url string.
     var ltksDicStore: [PostImageUrlString:LtkPost] = [:]
     
-    /// the UIImage? heroImage object.
-    var profileImage:UIImage?
+  
     
     // MARK: Codable Data From Get Request
         /// the id of a user profile
@@ -73,16 +72,22 @@ class Profile: Decodable, HasDownloadableImages{
                     searchable = "searchable"
            }
     
-    lazy var downloadableImageUrls: [String] = {
-        return [avatarUrl]
-        }()
-    
-     func downloadImages(){
-        NetworkManager.shared.downloadMultipleImages(downloadableImageUrls, completion: { result in
-            self.profileImage = result.image
+  
+        public func getProfileImage(completion: @escaping(UIImage?)->()){
+            NetworkManager.shared.downloadImage(avatarUrl, completion: { result in
+                switch result{
+                case.success(let img):
+                    return completion(img.image)
+                case .failure(let err):
+                    print("Unable to get profile image, Error: \(err)")
+                    return completion(nil)
+                }
+                
             })
         }
-    }
+    
+ 
+}
 
 protocol HasDownloadableImages{
     func downloadImages()

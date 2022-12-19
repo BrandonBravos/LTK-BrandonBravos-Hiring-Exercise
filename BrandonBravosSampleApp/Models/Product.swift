@@ -8,10 +8,9 @@
 import Foundation
 import UIKit
 
-class Product: Decodable{
+struct Product: Decodable{
    
-   /// products uiImage
-    var productImage: UIImage?
+
     
     // MARK: Codable Data From Get Request
 
@@ -55,6 +54,19 @@ class Product: Decodable{
                     retailerId = "retailer_id",
                     retailerDisplayNamelet = "retailer_display_namelet"
            }
+    
+    public func getProductImage(completion: @escaping(UIImage?)->()){
+        NetworkManager.shared.downloadImage(imageUrl, completion: { result in
+            switch result{
+            case.success(let img):
+                return completion(img.image)
+            case .failure(let err):
+                print("Unable to get profile image, Error: \(err)")
+                return completion(nil)
+            }
+            
+        })
+    }
 }
 
  class ProductLinks: Decodable{

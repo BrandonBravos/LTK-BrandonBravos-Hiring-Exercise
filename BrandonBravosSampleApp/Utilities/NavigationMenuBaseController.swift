@@ -140,8 +140,8 @@ class NavigationMenuBaseController: UITabBarController {
     var viewController: UIViewController {
             switch self {
             case .home:
-                let homeVC = HomeViewController()
-                return homeVC
+                let blankVC = HomeViewController(); blankVC.view.backgroundColor = .white
+                return blankVC
             case .favorites:
                 let blankVC = BlankViewController(); blankVC.view.backgroundColor = .white
                 return blankVC
@@ -149,7 +149,7 @@ class NavigationMenuBaseController: UITabBarController {
                 let blankVC = BlankViewController(); blankVC.view.backgroundColor = .white
                 return blankVC
             case .discover:
-                let blankVC = BlankViewController(); blankVC.view.backgroundColor = .white
+                let blankVC = DiscoveryViewController(); blankVC.view.backgroundColor = .white
                 return blankVC
             case .menu:
                 let blankVC = BlankViewController(); blankVC.view.backgroundColor = .white
