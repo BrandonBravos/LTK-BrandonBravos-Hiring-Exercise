@@ -11,8 +11,8 @@ class FollowedCreatorsCell: UICollectionViewCell {
     
     static let reuseIdentifier = "FollowedCreatorsCell"
     
-    var users: [Profile] = []
-    
+   private var users: [Profile] = []
+
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 0, left: 2, bottom: 0, right: 2)
@@ -27,7 +27,6 @@ class FollowedCreatorsCell: UICollectionViewCell {
     
     func setProfileArray(profiles: [Profile]){
         self.users = profiles
-        
         collectionView.reloadData()
     }
     
@@ -61,9 +60,9 @@ extension FollowedCreatorsCell: UICollectionViewDelegate, UICollectionViewDataSo
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let shopCell = collectionView.dequeueReusableCell(withReuseIdentifier: FollowingCell.reuseIdentifier, for: indexPath) as! FollowingCell
-        shopCell.configure(profile: users[indexPath.row])
-        return shopCell
+        let followingCell = collectionView.dequeueReusableCell(withReuseIdentifier: FollowingCell.reuseIdentifier, for: indexPath) as! FollowingCell
+        followingCell.configure(profile: users[indexPath.row])
+        return followingCell
     }
 
 }
@@ -80,7 +79,6 @@ private class FollowingCell:UICollectionViewCell{
     
     
     func configure(profile: Profile){
-        
         profile.getProfileImage(completion: { [weak self] result in
             DispatchQueue.main.async {
                 self?.profileImageView.image = result

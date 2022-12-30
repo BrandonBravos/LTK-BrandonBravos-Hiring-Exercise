@@ -13,12 +13,11 @@ class HeaderSearchLabelView: UIView {
     public let backButton = UIButton()
 
     private var hasBackButton = false
-    
+        
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .white
         isUserInteractionEnabled = true
-
         setUpView()
     }
     
@@ -28,11 +27,19 @@ class HeaderSearchLabelView: UIView {
         setUpView()
     }
     
+    @objc private func didTap(){
+        print("Tapped the button")
+    }
     
-    
-    private func setUpView(){
-        
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
 
+
+//MARK: Layout
+extension HeaderSearchLabelView{
+    private func setUpView(){
         if hasBackButton{
             backButton.setImage(UIImage(named: "back_arrow_icon"), for: .normal)
             addSubview(backButton)
@@ -64,9 +71,7 @@ class HeaderSearchLabelView: UIView {
         } else {
             let anchor = logoImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10)
             anchor.isActive = true
-
         }
-
 
         addSubview(searchView)
         searchView.translatesAutoresizingMaskIntoConstraints = false
@@ -76,21 +81,5 @@ class HeaderSearchLabelView: UIView {
             searchView.topAnchor.constraint(equalTo: topAnchor),
             searchView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
-
-        
-
-        
-    
-    }
-    
-    @objc private func didTap(){
-        print("Tapped the button")
-    }
-    
-    
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
-

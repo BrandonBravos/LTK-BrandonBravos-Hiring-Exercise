@@ -21,7 +21,10 @@ class NetworkManager{
     static let shared = NetworkManager()
 
     // the maximum amount of images we want to download at once.
-    private let maxDownloadThreads = 5
+    private let maxDownloadThreads = 4
+    
+    private let operationQueue = OperationQueue()
+
     
     /// gets LTKS, Profiles and Products.
     func fetchData(withUrl urlStr:String, completed: @escaping NetworkResult){
@@ -56,7 +59,6 @@ class NetworkManager{
                 let decoder = JSONDecoder()
                 let decodedResponse = try decoder.decode(LtkResponse.self, from: data)
                 completed(.success((decodedResponse.meta, decodedResponse.createFeaturedProfiles())))
-                //print("NetworkManager: completed")
 
             } catch {
                 print("NetworkManager: UnableToDecode")
@@ -73,7 +75,7 @@ class NetworkManager{
         let url = URL(fileURLWithPath: path)
         
          // not needed, since we already reize image to be smaller, but may be useful for further implementaitons
-        let data = img.jpegData(compressionQuality: 0.5)
+        let data = img.jpegData(compressionQuality: 0.2)
          
          // write data to our temp folder
         try? data?.write(to: url)
@@ -116,7 +118,7 @@ class NetworkManager{
                 }
                 
                 //TODO: reduce imageQuality based on device width
-                let imageQuality: CGFloat = 1 // 2 is a good medium for smooth scrolling on both iPad and iPhone
+                let imageQuality: CGFloat = 1.5 // 2 is a good medium for smooth scrolling on both iPad and iPhone
                 let width = UIScreen.main.bounds.width * imageQuality
                
                 // resize the image, resizing is needed to keep frame rate low while scrolling
@@ -132,9 +134,10 @@ class NetworkManager{
     
     // downloads multiple images at once
     func downloadMultipleImages(_ urls: [String], completion:  @escaping (UrlImageTuple) -> ()){
-        // create an operation queue
-        let operationQueue = OperationQueue()
+
         operationQueue.maxConcurrentOperationCount = maxDownloadThreads
+        operationQueue.qualityOfService = .userInitiated
+        
         for url in urls{
             // add block operations, each one downoads an image to our queue
             let operation = BlockOperation()
@@ -145,7 +148,9 @@ class NetworkManager{
                         let result: UrlImageTuple = ( tuple.url, tuple.image)
                         completion(result)
                     case.failure(_):
-                        print("error")
+                        print("error downloading image")
+                        let result: UrlImageTuple = ("", UIImage(named: "heart_icon_selected")!)
+                        completion(result)
                         }
                     })
                }
@@ -159,6 +164,4 @@ class NetworkManager{
         let serialize = try? JSONSerialization.jsonObject(with: data)
         print(serialize ?? "json error")
     }
-        
-        
 }

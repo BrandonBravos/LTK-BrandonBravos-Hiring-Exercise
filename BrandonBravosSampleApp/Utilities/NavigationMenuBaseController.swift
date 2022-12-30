@@ -140,20 +140,20 @@ class NavigationMenuBaseController: UITabBarController {
     var viewController: UIViewController {
             switch self {
             case .home:
-                let blankVC = HomeViewController(); blankVC.view.backgroundColor = .white
-                return blankVC
+                let initialViewController = HomeViewController(); initialViewController.view.backgroundColor = .white
+                return initialViewController
             case .favorites:
-                let blankVC = BlankViewController(); blankVC.view.backgroundColor = .white
-                return blankVC
+                let favoritesVC = BlankViewController(); favoritesVC.view.backgroundColor = .white
+                return favoritesVC
             case .creators:
-                let blankVC = BlankViewController(); blankVC.view.backgroundColor = .white
-                return blankVC
+                let creatorsVC = BlankViewController(); creatorsVC.view.backgroundColor = .white
+                return creatorsVC
             case .discover:
-                let blankVC = DiscoveryViewController(); blankVC.view.backgroundColor = .white
-                return blankVC
+                let discoverVC = DiscoveryViewController(); discoverVC.view.backgroundColor = .white
+                return discoverVC
             case .menu:
-                let blankVC = BlankViewController(); blankVC.view.backgroundColor = .white
-                return blankVC
+                let menuVC = BlankViewController(); menuVC.view.backgroundColor = .white
+                return menuVC
             }
         }
     
