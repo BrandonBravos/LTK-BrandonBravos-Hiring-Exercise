@@ -37,6 +37,7 @@
 		A180148C294B103900CD819A /* UserFollowBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180148B294B103900CD819A /* UserFollowBarView.swift */; };
 		A180148F294D16B300CD819A /* ShopThePicHeaderReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180148E294D16B300CD819A /* ShopThePicHeaderReusableView.swift */; };
 		A1801491294D25F500CD819A /* ResponseMeta.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1801490294D25F500CD819A /* ResponseMeta.swift */; };
+		A181DCFA2955180300C00C2E /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A181DCF92955180300C00C2E /* SearchViewController.swift */; };
 		A1995A072941D9020053052D /* MoreFromUserReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1995A062941D9020053052D /* MoreFromUserReusableView.swift */; };
 		A1995A092941E4FC0053052D /* NavigationMenuBaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1995A082941E4FC0053052D /* NavigationMenuBaseController.swift */; };
 		A1995A0B2941E5350053052D /* CustomTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1995A0A2941E5350053052D /* CustomTabBarView.swift */; };
@@ -46,6 +47,8 @@
 		A1FFD466294EEF0A0037BFD4 /* SimpleHeaderReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1FFD465294EEF0A0037BFD4 /* SimpleHeaderReusableView.swift */; };
 		A1FFD468294EF80B0037BFD4 /* FullDisplayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1FFD467294EF80B0037BFD4 /* FullDisplayCell.swift */; };
 		A1FFD46A294EFEDA0037BFD4 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1FFD469294EFEDA0037BFD4 /* HomeViewModel.swift */; };
+		A1FFD492295249270037BFD4 /* AlgoliaSearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1FFD491295249270037BFD4 /* AlgoliaSearchManager.swift */; };
+		A1FFD495295249640037BFD4 /* AlgoliaSearchClient in Frameworks */ = {isa = PBXBuildFile; productRef = A1FFD494295249640037BFD4 /* AlgoliaSearchClient */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -81,6 +84,7 @@
 		A180148B294B103900CD819A /* UserFollowBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserFollowBarView.swift; sourceTree = "<group>"; };
 		A180148E294D16B300CD819A /* ShopThePicHeaderReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopThePicHeaderReusableView.swift; sourceTree = "<group>"; };
 		A1801490294D25F500CD819A /* ResponseMeta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseMeta.swift; sourceTree = "<group>"; };
+		A181DCF92955180300C00C2E /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		A1995A062941D9020053052D /* MoreFromUserReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreFromUserReusableView.swift; sourceTree = "<group>"; };
 		A1995A082941E4FC0053052D /* NavigationMenuBaseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationMenuBaseController.swift; sourceTree = "<group>"; };
 		A1995A0A2941E5350053052D /* CustomTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarView.swift; sourceTree = "<group>"; };
@@ -90,6 +94,7 @@
 		A1FFD465294EEF0A0037BFD4 /* SimpleHeaderReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleHeaderReusableView.swift; sourceTree = "<group>"; };
 		A1FFD467294EF80B0037BFD4 /* FullDisplayCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullDisplayCell.swift; sourceTree = "<group>"; };
 		A1FFD469294EFEDA0037BFD4 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		A1FFD491295249270037BFD4 /* AlgoliaSearchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlgoliaSearchManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +102,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1FFD495295249640037BFD4 /* AlgoliaSearchClient in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -154,6 +160,7 @@
 				A16C81E8293E950E00E749FD /* NetworkManager.swift */,
 				A16C81FB293FE27000E749FD /* Extensions.swift */,
 				A1995A082941E4FC0053052D /* NavigationMenuBaseController.swift */,
+				A1FFD491295249270037BFD4 /* AlgoliaSearchManager.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -161,9 +168,10 @@
 		A16C81E7293E94EB00E749FD /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				A1FFD461294EEA0C0037BFD4 /* HomeViewController.swift */,
 				A16C81D1293E932400E749FD /* DiscoveryViewController.swift */,
 				A16C81FF2940178700E749FD /* DisplayViewController.swift */,
-				A1FFD461294EEA0C0037BFD4 /* HomeViewController.swift */,
+				A181DCF92955180300C00C2E /* SearchViewController.swift */,
 				A1995A0E2941E5A20053052D /* BlankViewController.swift */,
 			);
 			path = ViewControllers;
@@ -196,9 +204,9 @@
 		A16C81FA293F378000E749FD /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				A1FFD469294EFEDA0037BFD4 /* HomeViewModel.swift */,
 				A16C81F5293F352900E749FD /* DiscoveryViewModel.swift */,
 				A16C82222941731A00E749FD /* DisplayViewModel.swift */,
-				A1FFD469294EFEDA0037BFD4 /* HomeViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -262,6 +270,9 @@
 			dependencies = (
 			);
 			name = BrandonBravosSampleApp;
+			packageProductDependencies = (
+				A1FFD494295249640037BFD4 /* AlgoliaSearchClient */,
+			);
 			productName = BrandonBravosSampleApp;
 			productReference = A16C81CA293E932400E749FD /* BrandonBravosSampleApp.app */;
 			productType = "com.apple.product-type.application";
@@ -290,6 +301,9 @@
 				Base,
 			);
 			mainGroup = A16C81C1293E932400E749FD;
+			packageReferences = (
+				A1FFD493295249640037BFD4 /* XCRemoteSwiftPackageReference "algoliasearch-client-swift" */,
+			);
 			productRefGroup = A16C81CB293E932400E749FD /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -323,6 +337,7 @@
 				A1FFD468294EF80B0037BFD4 /* FullDisplayCell.swift in Sources */,
 				A1801488294A76FA00CD819A /* BlankReusableCollectionView.swift in Sources */,
 				A16C81EE293F307E00E749FD /* Profile.swift in Sources */,
+				A1FFD492295249270037BFD4 /* AlgoliaSearchManager.swift in Sources */,
 				A16C81D2293E932400E749FD /* DiscoveryViewController.swift in Sources */,
 				A16C81F6293F352900E749FD /* DiscoveryViewModel.swift in Sources */,
 				A16C81F9293F373000E749FD /* LtkImageCell.swift in Sources */,
@@ -334,6 +349,7 @@
 				A16C81FC293FE27000E749FD /* Extensions.swift in Sources */,
 				A1FFD466294EEF0A0037BFD4 /* SimpleHeaderReusableView.swift in Sources */,
 				A1FFD464294EEE830037BFD4 /* FollowedCreatorsCell.swift in Sources */,
+				A181DCFA2955180300C00C2E /* SearchViewController.swift in Sources */,
 				A16C8211294049DE00E749FD /* LtkLoadIndicator.swift in Sources */,
 				A16C821529404F6500E749FD /* SearchView.swift in Sources */,
 				A1801491294D25F500CD819A /* ResponseMeta.swift in Sources */,
@@ -562,6 +578,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A1FFD493295249640037BFD4 /* XCRemoteSwiftPackageReference "algoliasearch-client-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/algolia/algoliasearch-client-swift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A1FFD494295249640037BFD4 /* AlgoliaSearchClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1FFD493295249640037BFD4 /* XCRemoteSwiftPackageReference "algoliasearch-client-swift" */;
+			productName = AlgoliaSearchClient;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		A16C81D6293E932400E749FD /* BrandonBravosSampleApp.xcdatamodeld */ = {

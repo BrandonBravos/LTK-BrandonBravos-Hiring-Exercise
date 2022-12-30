@@ -19,7 +19,7 @@ class DisplayViewModel{
 
     // the api used to get other posts from the same user
     let apiUrl = "https://api-gateway.rewardstyle.com/api/ltk/v2/ltks/?profile_id="
-    let apiUrlEndLimit = "&limit=10"
+    let apiUrlEndLimit = "&limit=4"
 
     // main media for currently displayed post
     private var postPicture: UIImage? 

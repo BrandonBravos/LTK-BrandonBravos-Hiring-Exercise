@@ -27,7 +27,9 @@ class DiscoveryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.addViews()
-                        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
         // gets an array of creator profiles, their posts, and products related to that post
         viewModel.getPostData { [weak self] in
             DispatchQueue.main.async {

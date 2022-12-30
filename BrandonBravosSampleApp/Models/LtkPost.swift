@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class LtkPost: Decodable{
+struct LtkPost: Decodable{
     
     /// an array of posts related products
     var products: [Product] = []
@@ -20,21 +20,22 @@ class LtkPost: Decodable{
 
     /// used to resize an images height while keeping its aspect ratio
     func getHeightAspectRatio(withWidth:CGFloat) -> CGFloat{
-        let ratio = imageHeight! / imageWidth!
+        let ratio = heroImageHeight / heroWidth
         let desiredWidth = withWidth
         let newHeight = desiredWidth * ratio
         return newHeight
     }
     
+  
     // MARK: Codable Data From Get Request
     /// url that returns post image
     var heroImageUrl: String
     
     /// main images width
-    var heroWidth: Int?
+    var heroWidth: CGFloat
     
     /// main images height
-    var heroImageHeight: Int?
+    var heroImageHeight: CGFloat
     
     /// unique id for post
     var id: String
@@ -71,10 +72,12 @@ class LtkPost: Decodable{
     /// an array of products related to this post
     var productIds: [String] = []
     
+    var hash: String
+    
     //  convert API's snake case to iOS camel case
     private enum CodingKeys : String, CodingKey {
            case heroImageUrl = "hero_image",
-                heroWidth = "hero_width",
+                heroWidth = "hero_image_width",
                 heroImageHeight = "hero_image_height",
                 id = "id",
                 profileId = "profile_id",
@@ -87,15 +90,15 @@ class LtkPost: Decodable{
                 datePublished = "date_published",
                 caption = "caption",
                 shareUrl = "share_url",
-                productIds = "product_ids"
+                productIds = "product_ids",
+                hash = "hash"
        }
     
     public func getPostImage(completion: @escaping(UIImage?)->()){
         NetworkManager.shared.downloadImage(heroImageUrl, completion: { result in
             switch result{
             case.success(let img):
-                self.imageHeight = img.image.size.height
-                self.imageWidth = img.image.size.width
+               
 
                 return completion(img.image)
             case .failure(let err):

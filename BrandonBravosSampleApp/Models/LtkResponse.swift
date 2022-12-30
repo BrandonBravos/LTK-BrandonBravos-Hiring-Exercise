@@ -7,7 +7,7 @@
 
 import Foundation
 
-class LtkResponse: Decodable{
+struct LtkResponse: Decodable{
     var profiles: [Profile]
     var ltks: [LtkPost] 
     var products: [Product]
@@ -35,14 +35,15 @@ class LtkResponse: Decodable{
         
         // add ltks to profiles
         for ltk in ltks {
+            var ltkReference = ltk
             let profile = profileDic[ltk.profileId]
             
             for product in ltk.productIds {
-                ltk.products.append(productDic[product]!)
+                ltkReference.products.append(productDic[product]!)
             }
             
             // add the ltk to our profile object
-            profile?.ltks.append(ltk)
+            profile?.ltks.append(ltkReference)
             
             // here we add our post to our users post dictionary store
             profile?.ltksDicStore[ltk.heroImageUrl] = ltk

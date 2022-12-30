@@ -25,7 +25,7 @@ class HomeViewModel{
     private var fetchUserDic = [PostImageUrlString : Profile] ()
     
     // the api to get our featured profiles and posts from
-    private let apiURL = "https://api-gateway.rewardstyle.com/api/ltk/v2/ltks/?featured=true&limit=5"
+    private let apiURL = "https://api-gateway.rewardstyle.com/api/ltk/v2/ltks/?featured=true&limit=10"
     
     
     /// returns an image in a list of loaded images
@@ -57,6 +57,12 @@ class HomeViewModel{
     
     // once an image has been downloaded, add it to the users post, then allow it to be shown in our collection view
     func downloadPostImages(completion: @escaping ()->Void){
+        for profile in profileArray{
+            if profile.ltks.first == nil{
+                print("no ltk")
+            }
+        }
+        
         NetworkManager.shared.downloadMultipleImages(profileArray.map{$0.ltks.first!.heroImageUrl}, completion: { test in
             let user = self.fetchUserDic[test.url]!
             user.ltks.first!.getPostImage{ [self]image in

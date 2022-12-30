@@ -26,9 +26,10 @@ class UserFollowBarView: UIView {
             return
         }
 
-        profileImageView.image = image
+        DispatchQueue.main.async {
+            self.profileImageView.image = image
+        }
     }
-    
     
     override func layoutSubviews() {
         profileImageView.clipsToBounds = true

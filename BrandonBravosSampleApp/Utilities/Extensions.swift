@@ -49,7 +49,27 @@ extension UIImage{
     }
 }
 
+extension String{
+    func getHashTags()->[String]{
+        let words = self.components(separatedBy: " ")
+        var hashTags = [String]()
+        for word in words{
+            if word.hasPrefix("#"){
+                let hashtag = word.dropFirst()
+                hashTags.append(String(hashtag))
+               }
+        }
+        
+        return hashTags
+    }
+}
 
+extension Sequence where Element: Hashable {
+    func uniqued() -> [Element] {
+        var set = Set<Element>()
+        return filter { set.insert($0).inserted }
+    }
+}
 
 extension UIFont{
     enum MontserratType: String{

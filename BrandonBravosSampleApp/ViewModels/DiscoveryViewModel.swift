@@ -60,7 +60,12 @@ class DiscoveryViewModel{
     // once an image has been downloaded, add it to the users post, then allow it to be shown in our collection view
     func downloadPostImages(completion: @escaping ()->Void){
         NetworkManager.shared.downloadMultipleImages(profileArray.map{$0.ltks.first!.heroImageUrl}, completion: { test in
-            let user = self.fetchUserDic[test.url]!
+            guard let user = self.fetchUserDic[test.url] else{
+                print("Error fetching user")
+                completion()
+                return
+            }
+            
             user.ltks.first!.getPostImage{image in
                 self.loadedPostsArray.append(user)
                 completion()
