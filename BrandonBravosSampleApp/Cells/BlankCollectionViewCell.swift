@@ -7,6 +7,6 @@
 
 import UIKit
 
-class BlankCollectionViewCell: UICollectionViewCell{
+class BlankCollectionViewCell: UICollectionViewCell {
     static let reuseIdentifier = "BlankCollectionViewCell"
 }

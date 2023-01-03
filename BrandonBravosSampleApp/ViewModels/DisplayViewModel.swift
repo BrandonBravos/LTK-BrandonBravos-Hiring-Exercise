@@ -7,13 +7,13 @@
 
 import UIKit
 
-class DisplayViewModel{
+class DisplayViewModel {
     // the user profile related to this display
     private var user: Profile!
-    
+
     // the post that is being shared
     public var ltk: LtkPost!
-    
+
     var metaData: ResponseMeta?
     public var isLoading = false
 
@@ -22,160 +22,150 @@ class DisplayViewModel{
     let apiUrlEndLimit = "&limit=4"
 
     // main media for currently displayed post
-    private var postPicture: UIImage? 
-    
+    private var postPicture: UIImage?
+
     // products related to this post
     private var products: [Product] = []
-    
+
     // an array of (url, images) of the products related to this post, this is downloaded once displayed
     private var loadedProducts = [Product]()
-    
+
     // the users profile image, this begins download with post
     private var profileImage: UIImage?
-    
+
     // a dictionary of strings used to update our product when an image has finished downloading
-    private var productLinkDic = [ProductImageUrlString : Product]()
-    
+    private var productLinkDic = [ProductImageUrlString: Product]()
+
     // this dictionary is used to connect posts that have loaded their image to the users ltk
-    private var ltkLinkDic = [PostImageUrlString : LtkPost]()
-    
+    private var ltkLinkDic = [PostImageUrlString: LtkPost]()
+
     // an array of posts that have loaded
     public var loadedPostsArray = [LtkPost]()
-    
-    
-    init(user: Profile, ltk: LtkPost){
+
+    init(user: Profile, ltk: LtkPost) {
         self.user = user
         self.ltk = ltk
         self.products = ltk.products
-        
-        for product in products{
+
+        for product in products {
             productLinkDic[product.imageUrl] = product
         }
-        
+
         // add our users already loaded ltks to prevent showing a post twice
-        for post in user.ltks{
+        for post in user.ltks {
             ltkLinkDic[post.heroImageUrl] = post
         }
     }
-    
+
     /// gets the post pictures and product images
-    public func fetchProductData(completion: @escaping ()->()){
-        guard let user = user else {
-            print("error finding user")
-            return
-        }
-       
-         user.getProfileImage(completion: { result in
-             self.profileImage = result
-        })
-        
-        ltk.getPostImage{ image in
+    public func fetchProductData(completion: @escaping () -> Void) {
+        ltk.getPostImage { image in
             self.postPicture = image
         }
-   
+
         var productImageUrls = [String]()
-        for product in products{ productImageUrls.append(product.imageUrl) }
-        
-        downloadProductImages(urls: productImageUrls){[weak self] result in
-       
-                let product = self?.productLinkDic[result.url]
-                product?.getProductImage{ image in
-                    DispatchQueue.main.async {
+        for product in products {
+            productImageUrls.append(product.imageUrl)
+        }
+
+        downloadProductImages(urls: productImageUrls) { [weak self] result in
+            let product = self?.productLinkDic[result.url]
+            product?.getProductImage { _ in
+                DispatchQueue.main.async {
                     self?.loadedProducts.append(product!)
                     completion()
                 }
             }
         }
     }
-    
-    // gets our users post data, checks if that post has been loaded, and if it hasnt, adds it to our users dicStore and ltk list
-    func getUserPostData(completion: @escaping ()->()){
+
+    // gets our users post data, checks if that post has been loaded,
+        // and if it hasnt, adds it to our users dicStore and ltk list
+    func getUserPostData(completion: @escaping () -> Void) {
         isLoading = true
         var url = apiUrl + user.id + apiUrlEndLimit
-                
-        if let meta = metaData{
+
+        if let meta = metaData {
             guard let nextUrl = meta.nextURL else {
                 print("metaData: No more Posts")
                 return
             }
-                url = nextUrl
+            url = nextUrl
         }
-        
-        NetworkManager.shared.fetchData(withUrl: url){ [weak self] result in
-                switch result{
-                    case .success(let response):
-                    self?.isLoading = false
-                    self?.loadedPostsArray = response.profiles.first!.ltks
-                    self?.metaData = response.meta
-                    self?.createUserFetchDic()
 
-                    var postImagesToDownload = [String]()
-                    guard let postArray = self?.loadedPostsArray else{
+        NetworkManager.shared.fetchData(withUrl: url) { [weak self] result in
+            switch result {
+            case .success(let response):
+                self?.isLoading = false
+                self?.loadedPostsArray = response.profiles.first!.ltks
+                self?.metaData = response.meta
+                self?.createUserFetchDic()
+                var postImagesToDownload = [String]()
+                guard let postArray = self?.loadedPostsArray else {
+                    return
+                }
+                for post in postArray where self?.user.ltksDicStore[post.heroImageUrl] == nil {
+                        postImagesToDownload.append(post.heroImageUrl)
+                }
+
+                self?.downloadProductImages(urls: postImagesToDownload) { response in
+                    guard let post = self?.ltkLinkDic[response.url] else {
                         return
                     }
-                    for post in postArray{
-                        // if our user doesnt have this post, add it to our toDownload array
-                        if self?.user.ltksDicStore[post.heroImageUrl] == nil{
-                            postImagesToDownload.append(post.heroImageUrl)
-                        }
-                    }
-
-                    self?.downloadProductImages(urls: postImagesToDownload, completion: { response in
-                        let post = self?.ltkLinkDic[response.url]
-                        post?.getPostImage{ image in
-                            self?.user.ltks.append(post!)
+                    post.getPostImage { _ in
+                        DispatchQueue.main.async {
+                            self?.user.ltks.append(post)
                             self?.user.ltksDicStore[response.url] = post
                             completion()
                         }
-                    })
-                    
-                case.failure(let error):
-                    //TODO: Handle Error
-                    print("something went wrong \(error)")
+                    }
                 }
+
+            case.failure(let error):
+                print("something went wrong \(error)")
+            }
         }
     }
-    
-    func createUserFetchDic(){
-        for ltk in loadedPostsArray{
+
+    func createUserFetchDic() {
+        for ltk in loadedPostsArray {
             ltkLinkDic[ltk.heroImageUrl] = ltk
         }
     }
-    
-    func downloadProductImages(urls: [String], completion: @escaping (UrlImageTuple) -> ()){
-        NetworkManager.shared.downloadMultipleImages(urls, completion: {result in
+
+    func downloadProductImages(urls: [String], completion: @escaping (UrlImageTuple) -> Void) {
+        NetworkManager.shared.downloadMultipleImages(urls, completion: { result in
             completion(result)
         })
     }
-    
-    public func getUser() -> Profile{
+
+    public func getUser() -> Profile {
         return user
     }
-    
-    public func getLoadedProductsCount() -> Int{
+
+    public func getLoadedProductsCount() -> Int {
         return loadedProducts.count
     }
-    
-    public func getProductImage(withIndex indexPath: IndexPath, completion: @escaping(UIImage?)->()){
+
+    public func getProductImage(withIndex indexPath: IndexPath, completion: @escaping(UIImage?) -> Void) {
         loadedProducts[indexPath.row].getProductImage(completion: { image in
             completion(image)
         })
     }
-    
-    public func getPostImage(completion: @escaping(UIImage?)->()){
-        ltk.getPostImage{ image in
+
+    public func getPostImage(completion: @escaping(UIImage?) -> Void) {
+        ltk.getPostImage { image in
             completion(image)
         }
     }
-    
-    public func getProfilePicture(completion: @escaping(UIImage?)->()){
-        user.getProfileImage(completion: { result in
+
+    public func getProfilePicture(completion: @escaping(UIImage?) -> Void) {
+        user.getProfileImage { result in
             return completion(result)
-        })
-        
+        }
     }
-    
-    public func getProductUrl(withIndexPath indexPath: IndexPath)-> String?{
+
+    public func getProductUrl(withIndexPath indexPath: IndexPath) -> String? {
         return loadedProducts[indexPath.row].hyperlink
     }
 }

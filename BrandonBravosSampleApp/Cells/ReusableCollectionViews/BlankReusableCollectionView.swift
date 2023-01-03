@@ -8,10 +8,8 @@
 import UIKit
 
 class BlankReusableCollectionView: UICollectionReusableView {
-       static let reuseIdentifier = "HeaderReusableCollectionView"
-    
-    func configure(){
+    static let reuseIdentifier = "HeaderReusableCollectionView"
+    func configure() {
         self.backgroundColor = .systemGreen
     }
-    
 }

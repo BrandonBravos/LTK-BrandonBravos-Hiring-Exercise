@@ -37,10 +37,10 @@ class HeaderSearchLabelView: UIView {
 }
 
 
-//MARK: Layout
-extension HeaderSearchLabelView{
-    private func setUpView(){
-        if hasBackButton{
+// MARK: Layout
+extension HeaderSearchLabelView {
+    private func setUpView() {
+        if hasBackButton {
             backButton.setImage(UIImage(named: "back_arrow_icon"), for: .normal)
             addSubview(backButton)
             backButton.translatesAutoresizingMaskIntoConstraints = false
@@ -65,7 +65,7 @@ extension HeaderSearchLabelView{
 
         ])
 
-        if hasBackButton{
+        if hasBackButton {
             let anchor = logoImageView.leadingAnchor.constraint(equalTo: backButton.trailingAnchor, constant: 2)
             anchor.isActive = true
         } else {

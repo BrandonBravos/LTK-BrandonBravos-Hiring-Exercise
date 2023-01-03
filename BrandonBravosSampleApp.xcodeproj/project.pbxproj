@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A16C3B902962493100589D55 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = A16C3B8F2962493100589D55 /* .swiftlint.yml */; };
+		A16C3B922964A76700589D55 /* TransitionImageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16C3B912964A76700589D55 /* TransitionImageController.swift */; };
 		A16C81CE293E932400E749FD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16C81CD293E932400E749FD /* AppDelegate.swift */; };
 		A16C81D0293E932400E749FD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16C81CF293E932400E749FD /* SceneDelegate.swift */; };
 		A16C81D2293E932400E749FD /* DiscoveryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16C81D1293E932400E749FD /* DiscoveryViewController.swift */; };
@@ -35,7 +37,7 @@
 		A1801488294A76FA00CD819A /* BlankReusableCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1801487294A76FA00CD819A /* BlankReusableCollectionView.swift */; };
 		A180148A294A774700CD819A /* BlankCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1801489294A774700CD819A /* BlankCollectionViewCell.swift */; };
 		A180148C294B103900CD819A /* UserFollowBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180148B294B103900CD819A /* UserFollowBarView.swift */; };
-		A180148F294D16B300CD819A /* ShopThePicHeaderReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180148E294D16B300CD819A /* ShopThePicHeaderReusableView.swift */; };
+		A180148F294D16B300CD819A /* ShopThePicHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180148E294D16B300CD819A /* ShopThePicHeaderView.swift */; };
 		A1801491294D25F500CD819A /* ResponseMeta.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1801490294D25F500CD819A /* ResponseMeta.swift */; };
 		A181DCFA2955180300C00C2E /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A181DCF92955180300C00C2E /* SearchViewController.swift */; };
 		A1995A072941D9020053052D /* MoreFromUserReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1995A062941D9020053052D /* MoreFromUserReusableView.swift */; };
@@ -52,6 +54,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A16C3B8F2962493100589D55 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
+		A16C3B912964A76700589D55 /* TransitionImageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitionImageController.swift; sourceTree = "<group>"; };
 		A16C81CA293E932400E749FD /* BrandonBravosSampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BrandonBravosSampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A16C81CD293E932400E749FD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A16C81CF293E932400E749FD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -82,7 +86,7 @@
 		A1801487294A76FA00CD819A /* BlankReusableCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlankReusableCollectionView.swift; sourceTree = "<group>"; };
 		A1801489294A774700CD819A /* BlankCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlankCollectionViewCell.swift; sourceTree = "<group>"; };
 		A180148B294B103900CD819A /* UserFollowBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserFollowBarView.swift; sourceTree = "<group>"; };
-		A180148E294D16B300CD819A /* ShopThePicHeaderReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopThePicHeaderReusableView.swift; sourceTree = "<group>"; };
+		A180148E294D16B300CD819A /* ShopThePicHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopThePicHeaderView.swift; sourceTree = "<group>"; };
 		A1801490294D25F500CD819A /* ResponseMeta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseMeta.swift; sourceTree = "<group>"; };
 		A181DCF92955180300C00C2E /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		A1995A062941D9020053052D /* MoreFromUserReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreFromUserReusableView.swift; sourceTree = "<group>"; };
@@ -161,6 +165,8 @@
 				A16C81FB293FE27000E749FD /* Extensions.swift */,
 				A1995A082941E4FC0053052D /* NavigationMenuBaseController.swift */,
 				A1FFD491295249270037BFD4 /* AlgoliaSearchManager.swift */,
+				A16C3B912964A76700589D55 /* TransitionImageController.swift */,
+				A16C3B8F2962493100589D55 /* .swiftlint.yml */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -247,7 +253,7 @@
 			isa = PBXGroup;
 			children = (
 				A1995A062941D9020053052D /* MoreFromUserReusableView.swift */,
-				A180148E294D16B300CD819A /* ShopThePicHeaderReusableView.swift */,
+				A180148E294D16B300CD819A /* ShopThePicHeaderView.swift */,
 				A1FFD465294EEF0A0037BFD4 /* SimpleHeaderReusableView.swift */,
 				A1801487294A76FA00CD819A /* BlankReusableCollectionView.swift */,
 			);
@@ -264,6 +270,7 @@
 				A16C81C6293E932400E749FD /* Sources */,
 				A16C81C7293E932400E749FD /* Frameworks */,
 				A16C81C8293E932400E749FD /* Resources */,
+				A16C3B8E2962488200589D55 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -321,6 +328,7 @@
 				A16C821E2940508300E749FD /* Montserrat-Regular.ttf in Resources */,
 				A16C821C2940508300E749FD /* Montserrat-Light.ttf in Resources */,
 				A16C81DD293E932500E749FD /* LaunchScreen.storyboard in Resources */,
+				A16C3B902962493100589D55 /* .swiftlint.yml in Resources */,
 				A16C821B2940508300E749FD /* Montserrat-Medium.ttf in Resources */,
 				A16C81DA293E932500E749FD /* Assets.xcassets in Resources */,
 				A16C821D2940508300E749FD /* Montserrat-SemiBold.ttf in Resources */,
@@ -328,6 +336,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		A16C3B8E2962488200589D55 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#if which swiftlint >/dev/null; then\n # swiftlint\n#else\n # echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\n#fi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		A16C81C6293E932400E749FD /* Sources */ = {
@@ -353,11 +381,12 @@
 				A16C8211294049DE00E749FD /* LtkLoadIndicator.swift in Sources */,
 				A16C821529404F6500E749FD /* SearchView.swift in Sources */,
 				A1801491294D25F500CD819A /* ResponseMeta.swift in Sources */,
-				A180148F294D16B300CD819A /* ShopThePicHeaderReusableView.swift in Sources */,
+				A180148F294D16B300CD819A /* ShopThePicHeaderView.swift in Sources */,
 				A16C81D0293E932400E749FD /* SceneDelegate.swift in Sources */,
 				A16C821329404F1700E749FD /* HeaderSearchLabelView.swift in Sources */,
 				A180148C294B103900CD819A /* UserFollowBarView.swift in Sources */,
 				A16C81F4293F30F100E749FD /* LtkPost.swift in Sources */,
+				A16C3B922964A76700589D55 /* TransitionImageController.swift in Sources */,
 				A1FFD462294EEA0C0037BFD4 /* HomeViewController.swift in Sources */,
 				A16C82002940178700E749FD /* DisplayViewController.swift in Sources */,
 				A16C82232941731A00E749FD /* DisplayViewModel.swift in Sources */,

@@ -7,16 +7,15 @@
 
 import UIKit
 
-
 // a reusable header for our LTK post
-class MoreFromUserReusableView: UICollectionReusableView{
+class MoreFromUserReusableView: UICollectionReusableView {
     static let reuseIdentifier = "MoreFromUserReusableView"
     
     let centerLabel = UILabel()
     let userNameLabel = UILabel()
     let profileImageView = UIImageView()
 
-    func configure(withUserName username: String, withProfileImage image: UIImage?){
+    func configure(withUserName username: String, withProfileImage image: UIImage?) {
         DispatchQueue.main.async {
             self.userNameLabel.text = username.uppercased()
         guard let image = image else {
@@ -28,10 +27,16 @@ class MoreFromUserReusableView: UICollectionReusableView{
 
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-           
-        
+    override init(frame: CGRect) {
+        super.init(frame: .zero)
+        setUpView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+     func setUpView() {
         userNameLabel.font = UIFont.montserratFont(withMontserrat: .regular, withSize: 16)
         userNameLabel.textAlignment = .center
         userNameLabel.sizeToFit()
@@ -40,10 +45,9 @@ class MoreFromUserReusableView: UICollectionReusableView{
         NSLayoutConstraint.activate([
             userNameLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             userNameLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
-            userNameLabel.widthAnchor.constraint(equalToConstant: 400),
-          //  userNameLabel.heightAnchor.constraint(equalToConstant: 35)
+            userNameLabel.widthAnchor.constraint(equalToConstant: 400)
         ])
-        
+
         centerLabel.text = "MORE FROM"
         centerLabel.font = UIFont.montserratFont(withMontserrat: .light, withSize: 10)
         centerLabel.textAlignment = .center
@@ -54,10 +58,9 @@ class MoreFromUserReusableView: UICollectionReusableView{
         NSLayoutConstraint.activate([
             centerLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             centerLabel.bottomAnchor.constraint(equalTo: userNameLabel.topAnchor, constant: -5),
-            centerLabel.widthAnchor.constraint(equalToConstant: 80),
+            centerLabel.widthAnchor.constraint(equalToConstant: 80)
         ])
-        
-        
+
         profileImageView.clipsToBounds = true
         profileImageView.layer.cornerRadius = 75 / 2
         addSubview(profileImageView)
@@ -66,13 +69,12 @@ class MoreFromUserReusableView: UICollectionReusableView{
             profileImageView.bottomAnchor.constraint(equalTo: centerLabel.topAnchor, constant: -10),
             profileImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
             profileImageView.widthAnchor.constraint(equalToConstant: 75),
-            profileImageView.heightAnchor.constraint(equalToConstant: 75),
-        
+            profileImageView.heightAnchor.constraint(equalToConstant: 75)
         ])
         addSideBars()
     }
  
-    func addSideBars(){
+    func addSideBars() {
         let sideBar = UIView()
         sideBar.backgroundColor = .gray
         addSubview(sideBar)
@@ -83,7 +85,6 @@ class MoreFromUserReusableView: UICollectionReusableView{
             sideBar.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5),
             sideBar.heightAnchor.constraint(equalToConstant: 0.35)
         ])
-        
         bringSubviewToFront(centerLabel)
     }
 }

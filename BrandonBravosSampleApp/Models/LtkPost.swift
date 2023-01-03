@@ -8,8 +8,7 @@
 import Foundation
 import UIKit
 
-struct LtkPost: Decodable{
-    
+struct LtkPost: Decodable {
     /// an array of posts related products
     var products: [Product] = []
 
@@ -19,63 +18,62 @@ struct LtkPost: Decodable{
     var imageHeight: CGFloat?
 
     /// used to resize an images height while keeping its aspect ratio
-    func getHeightAspectRatio(withWidth:CGFloat) -> CGFloat{
+    func getHeightAspectRatio(withWidth: CGFloat) -> CGFloat {
         let ratio = heroImageHeight / heroWidth
         let desiredWidth = withWidth
         let newHeight = desiredWidth * ratio
         return newHeight
     }
-    
-  
+
     // MARK: Codable Data From Get Request
     /// url that returns post image
     var heroImageUrl: String
-    
+
     /// main images width
     var heroWidth: CGFloat
-    
+
     /// main images height
     var heroImageHeight: CGFloat
-    
+
     /// unique id for post
     var id: String
-    
+
     /// unknown: do not use
     var profileId: String
-    
+
     /// the parent creator id related to the post
     var profileUserId: String?
-    
+
     /// unknown
     var videoMediaId: String?
-    
+
     var status: String?
-    
+
     /// the date in which the post was created
     var dateCreated: String?
-    
+
     /// the date in which the post was last updated
     var dateUpdated: String?
-    
+
     /// release time for post
     var dateScheduled: String?
-    
+
     /// the published date for which the post was shared
     var datePublished: String?
-    
+
     /// caption related to post
     var caption: String?
-    
-    ///url for deep sharing
+
+    /// url for deep sharing
     var shareUrl: String?
-    
+
     /// an array of products related to this post
     var productIds: [String] = []
-    
+
     var hash: String
-    
+
     //  convert API's snake case to iOS camel case
-    private enum CodingKeys : String, CodingKey {
+    private enum CodingKeys: String, CodingKey {
            case heroImageUrl = "hero_image",
                 heroWidth = "hero_image_width",
                 heroImageHeight = "hero_image_height",
@@ -94,22 +92,15 @@ struct LtkPost: Decodable{
                 hash = "hash"
        }
     
-    public func getPostImage(completion: @escaping(UIImage?)->()){
-        NetworkManager.shared.downloadImage(heroImageUrl, completion: { result in
-            switch result{
+    public func getPostImage(completion: @escaping(UIImage?)->Void) {
+        NetworkManager.shared.downloadImage(heroImageUrl) { result in
+            switch result {
             case.success(let img):
-               
-
                 return completion(img.image)
             case .failure(let err):
                 print("Unable to get profile image, Error: \(err)")
                 return completion(nil)
             }
-            
-        })
+        }
     }
-
 }
-
-
-

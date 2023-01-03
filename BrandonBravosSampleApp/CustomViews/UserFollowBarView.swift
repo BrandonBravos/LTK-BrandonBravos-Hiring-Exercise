@@ -15,13 +15,14 @@ class UserFollowBarView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
+        setUpViews()
     }
-    
-    public func setUsername(_ usernameString: String){
+
+    public func setUsername(_ usernameString: String) {
         profileUserTextLabel.text = usernameString
     }
     
-    public func setProfileImage(_ image: UIImage?){
+    public func setProfileImage(_ image: UIImage?) {
         guard let image = image else {
             return
         }
@@ -31,7 +32,7 @@ class UserFollowBarView: UIView {
         }
     }
     
-    override func layoutSubviews() {
+     func setUpViews() {
         profileImageView.clipsToBounds = true
         profileImageView.layer.cornerRadius = (profileBarHeight - 20) / 2
         addSubview(profileImageView)
@@ -40,10 +41,9 @@ class UserFollowBarView: UIView {
             profileImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             profileImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
             profileImageView.widthAnchor.constraint(equalToConstant: profileBarHeight - 20),
-            profileImageView.heightAnchor.constraint(equalToConstant: profileBarHeight - 20),
-
+            profileImageView.heightAnchor.constraint(equalToConstant: profileBarHeight - 20)
         ])
-        
+
         profileUserTextLabel.font = UIFont.montserratFont(withMontserrat: .bold, withSize: 15)
         addSubview(profileUserTextLabel)
         profileUserTextLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -53,11 +53,9 @@ class UserFollowBarView: UIView {
             profileUserTextLabel.heightAnchor.constraint(equalToConstant: profileBarHeight),
             profileUserTextLabel.widthAnchor.constraint(equalToConstant: 350)
         ])
-        
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
 }

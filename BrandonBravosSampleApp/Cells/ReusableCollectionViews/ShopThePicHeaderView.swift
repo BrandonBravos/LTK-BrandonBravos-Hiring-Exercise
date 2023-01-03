@@ -7,16 +7,21 @@
 
 import UIKit
 
-class ShopThePicHeaderReusableView: UICollectionReusableView {
-        
+class ShopThePicHeaderView: UICollectionReusableView {
     static let reuseIdentifier = "ShopThePicHeaderReusableView"
 
     let centerLabel = UILabel()
 
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-           
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setUpView()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    func setUpView() {
         centerLabel.font = UIFont.montserratFont(withMontserrat: .light, withSize: 16)
         centerLabel.text = "SHOP THE PIC"
         centerLabel.textAlignment = .center
@@ -31,7 +36,6 @@ class ShopThePicHeaderReusableView: UICollectionReusableView {
             centerLabel.heightAnchor.constraint(equalToConstant: 35)
         ])
 
-        
         let shopExactLabel = UILabel()
         shopExactLabel.text = "Shop exact products"
         shopExactLabel.font = UIFont.montserratFont(withMontserrat: .regular, withSize: 12)
@@ -45,8 +49,8 @@ class ShopThePicHeaderReusableView: UICollectionReusableView {
 
         addSideBars()
     }
- 
-    func addSideBars(){
+
+    func addSideBars() {
         let sideBar = UIView()
         sideBar.backgroundColor = .gray
         addSubview(sideBar)
@@ -57,7 +61,6 @@ class ShopThePicHeaderReusableView: UICollectionReusableView {
             sideBar.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5),
             sideBar.heightAnchor.constraint(equalToConstant: 0.35)
         ])
-        
         bringSubviewToFront(centerLabel)
     }
 }
