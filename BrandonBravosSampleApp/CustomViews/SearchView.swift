@@ -7,34 +7,33 @@
 
 import UIKit
 
-protocol SearchDelegate{
+protocol SearchDelegate {
     func searchEdited(searchTextField: UITextField, withText text: String)
 }
 
 class SearchView: UIView {
     let searchTextField = UITextField()
-    
     var delegate: SearchDelegate?
     
-    init(){
+    init() {
         super.init(frame: .zero)
         setUpView()
     }
     
-    @objc func searchTextEdited(sender:UITextField){
+    @objc func searchTextEdited(sender:UITextField) {
         guard delegate != nil else { print("No Search Delegate"); return}
-        if let text = sender.text{
-        delegate?.searchEdited(searchTextField: sender, withText: text)
+        if let text = sender.text {
+            delegate?.searchEdited(searchTextField: sender, withText: text)
         }
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
 //MARK: Layout
-extension SearchView{
+extension SearchView {
     private func setUpView(){
         self.layer.borderWidth = 1
         self.layer.borderColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
@@ -47,9 +46,9 @@ extension SearchView{
             searchIconView.centerYAnchor.constraint(equalTo: centerYAnchor),
             searchIconView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
             searchIconView.widthAnchor.constraint(equalTo: heightAnchor, multiplier: 0.5),
-            searchIconView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.5),
+            searchIconView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.5)
         ])
-        
+
         searchTextField.addTarget(self, action: #selector(searchTextEdited), for: .editingChanged)
         searchTextField.placeholder = "Search fashion, home & more"
         searchTextField.font = UIFont.systemFont(ofSize: 12)
@@ -61,7 +60,6 @@ extension SearchView{
             searchTextField.heightAnchor.constraint(equalTo: heightAnchor),
             searchTextField.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
-        
         bringSubviewToFront(searchTextField)
     }
 }

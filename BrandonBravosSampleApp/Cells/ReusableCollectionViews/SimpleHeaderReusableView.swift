@@ -11,12 +11,21 @@ class SimpleHeaderReusableView: UICollectionReusableView {
     static let reuseIdentifier = "SimpleHeaderReusableView"
 
     private let titleLabel = UILabel()
-    
+
     func setTitle(_ title: String){
         titleLabel.text = title
     }
-    
-    override func layoutSubviews() {
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setUpView()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    func setUpView() {
         titleLabel.font = UIFont.montserratFont(withMontserrat: .bold, withSize: 15)
         titleLabel.sizeToFit()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false

@@ -7,40 +7,29 @@
 
 import UIKit
 
-    // a simple cell containing an image view
-class LtkImageCell: UICollectionViewCell{
-    
+// a simple cell containing an image view
+class LtkImageCell: UICollectionViewCell {
     static let reuseIdentifier = "LTKCell"
-    
     public let imageView = UIImageView()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        animateFadeIn()
-      
+        setUpViews()
     }
-    
-    public func setImageView(_ image: UIImage?){
+
+    public func setImageView(_ image: UIImage?) {
         guard let image = image else {
+            print("LTKImageCell: Error Setting Image")
             return
         }
         imageView.image = image
-        
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    private func animateFadeIn(){
-//        alpha = 0
-//        UIView.animate(withDuration: 0.2, delay: 0,  options: .curveEaseIn, animations: {
-//            self.alpha = 1
-//        })
-    }
-    
-    override func layoutSubviews() {
-        //imageView.backgroundColor = .systemPink
+
+    private func setUpViews() {
         imageView.layer.cornerRadius = 15
         imageView.clipsToBounds = true
         self.addSubview(imageView)
@@ -53,4 +42,3 @@ class LtkImageCell: UICollectionViewCell{
         ])
     }
 }
-

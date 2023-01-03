@@ -10,27 +10,16 @@ import UIKit
 /// a view for showing a custom loading animation
 class LtkLoadIndicator: UIView {
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        isUserInteractionEnabled = false
-        
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     /// pauses and hides the view
-    public func pause(){
+    public func pause() {
         let pausedTime = layer.convertTime(CACurrentMediaTime(), from: nil)
          layer.speed = 0.0
          layer.timeOffset = pausedTime
          alpha = 0
     }
-    
-    
-    // unhides the view and resumes animation
-    func resumeAnimation(){
+
+    /// unhides the view and resumes animation
+    func resumeAnimation() {
         let pausedTime = layer.timeOffset
         layer.speed = 1.0
         layer.timeOffset = 0.0
@@ -42,6 +31,10 @@ class LtkLoadIndicator: UIView {
     }
     
     override func layoutSubviews() {
+        setUpViews()
+    }
+    
+     private func setUpViews() {
         let heartLayer = CALayer()
         heartLayer.contents = UIImage(named: "ltk_load_0")?.cgImage
         heartLayer.frame = bounds
@@ -51,7 +44,6 @@ class LtkLoadIndicator: UIView {
         circleLayer.contents = UIImage(named: "ltk_load_1")?.cgImage
         circleLayer.frame = bounds
         layer.addSublayer(circleLayer)
-        
 
         let spinAnimation = CASpringAnimation(keyPath: #keyPath(CALayer.transform))
         spinAnimation.fromValue = 0
@@ -61,12 +53,9 @@ class LtkLoadIndicator: UIView {
         spinAnimation.repeatCount = 1000
         spinAnimation.toValue = CGFloat.pi
 
-  
-        
-        //Apply all animations to sublayer
+        // Apply all animations to sublayer
         CATransaction.begin()
         circleLayer.add(spinAnimation, forKey: #keyPath(CALayer.cornerRadius))
         CATransaction.commit()
-
     }
 }

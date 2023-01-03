@@ -11,7 +11,9 @@ import UIKit
 
 
 
-// MARK: To whoever is reading this, I did not write the majority if this code. I got this code from https://github.com/sgr-ksmt/WaterfallLayout. this code was made By suguru-kishimoto, all I have done was made some very minor adjustments to fit my own personal needs. - Brandon Bravos
+// MARK: To whoever is reading this, I did not write the majority if this code.
+// I got this code from https://github.com/sgr-ksmt/WaterfallLayout.
+// This code was made By suguru-kishimoto, all I have done was made some very minor adjustments to fit my own personal needs. - Brandon Bravos
 
 public protocol WaterfallLayoutDelegate: AnyObject {
     // MARK: - Required
@@ -163,7 +165,8 @@ public class WaterfallLayout: UICollectionViewLayout {
         return newBounds.width != (collectionView?.bounds ?? .zero).width
     }
 
-    override public func shouldInvalidateLayout(forPreferredLayoutAttributes preferredAttributes: UICollectionViewLayoutAttributes, withOriginalAttributes originalAttributes: UICollectionViewLayoutAttributes) -> Bool {
+    override public func shouldInvalidateLayout(forPreferredLayoutAttributes preferredAttributes: UICollectionViewLayoutAttributes,
+                                                withOriginalAttributes originalAttributes: UICollectionViewLayoutAttributes) -> Bool {
         if let delegate = delegate {
             // For .waterfall mode, disabling shouldInvalidateLayout will prevent infinite loop to occur due to unstable constraints.
             // e.g. UIImageView causes AL constraints to be updated due to content hugging that causes infinite UI update. SEARCH
@@ -175,7 +178,8 @@ public class WaterfallLayout: UICollectionViewLayout {
         return false //cachedItemSizes[originalAttributes.indexPath] != preferredAttributes.size
     }
 
-    override public func invalidationContext(forPreferredLayoutAttributes preferredAttributes: UICollectionViewLayoutAttributes, withOriginalAttributes originalAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutInvalidationContext {
+    override public func invalidationContext(forPreferredLayoutAttributes preferredAttributes: UICollectionViewLayoutAttributes,
+                                             withOriginalAttributes originalAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutInvalidationContext {
         let context = super.invalidationContext(forPreferredLayoutAttributes: preferredAttributes, withOriginalAttributes: originalAttributes)
 
         guard let _ = collectionView else { return context }
