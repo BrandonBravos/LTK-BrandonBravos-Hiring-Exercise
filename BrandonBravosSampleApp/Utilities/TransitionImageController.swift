@@ -48,9 +48,8 @@ struct TransitionImageController {
             print("TransitionImageController: Error finding ViewController")
             return
         }
-        let height = fromImageView.image!.getHeightAspectRatio(withWidth:  UIScreen.main.bounds.width) - 20
+        let height = fromImageView.image!.getHeightAspectRatio(withWidth:  UIScreen.main.bounds.width - 20) - 30
         UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseIn, animations: { [self] in
-            transitionImageView.layer.cornerRadius = 0
             toViewController.view.backgroundColor = .white
             transitionImageView.frame = CGRect(x: 6, y: 163, width: UIScreen.main.bounds.width - 12, height: height)
         }, completion: { _ in
@@ -66,7 +65,7 @@ struct TransitionImageController {
             return
         }
         let transitionAlpha = 1.0
-        UIView.animate(withDuration: 0.2, delay: 0,
+        UIView.animate(withDuration: 0.1, delay: 0,
                        options: .curveEaseIn, animations: {
             for view in toViewController.animationViews {
                 view.alpha = transitionAlpha
