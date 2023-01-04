@@ -23,8 +23,8 @@ class NetworkManager {
     private let maxDownloadThreads = 8
     private let operationQueue = OperationQueue()
 
-    /// gets LTKS, Profiles and Products.
-    func fetchData(withUrl urlStr:String, completed: @escaping NetworkResult) {
+    /// gets LTKS, Profiles and Products. Returns a Result<(profiles: [Profile], meta: MetaResponse), NetworkError>
+    func fetchProfilesAndMeta(withUrl urlStr:String, completed: @escaping NetworkResult) {
         guard let url = URL(string: urlStr) else {
             completed(.failure(.invalidURL))
             return
@@ -107,7 +107,7 @@ class NetworkManager {
                 return
             }
 
-            let imageQuality: CGFloat = 1.5 // 2 is a good medium for smooth scrolling on both iPad and iPhone
+            let imageQuality: CGFloat = 2 // 2 is a good medium for smooth scrolling on both iPad and iPhone
             let width = UIScreen.main.bounds.width * imageQuality
 
             // resize the image, resizing is needed to keep frame rate low while scrolling

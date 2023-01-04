@@ -79,7 +79,7 @@ class DisplayViewModel {
             url = nextUrl
         }
 
-        NetworkManager.shared.fetchData(withUrl: url) { [weak self] result in
+        NetworkManager.shared.fetchProfilesAndMeta(withUrl: url) { [weak self] result in
             switch result {
             case .success(let response):
                 self?.isLoading = false

@@ -137,7 +137,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDelegate
         case .followedCreators:
             return CGSize(width: screenWidth, height: 100)
         case .followingPost:
-            let post = dataSource.snapshot().itemIdentifiers[indexPath.row].profile.ltks.first
+            let post = dataSource.snapshot().itemIdentifiers[indexPath.row + 1].profile.ltks.first
             let adjustedHeight = post?.getHeightAspectRatio(withWidth: screenWidth)
             return CGSize(width: screenWidth - 20, height: adjustedHeight! + 150)
         }
@@ -156,7 +156,8 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDelegate
         }
     }
 
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView,
+                        didSelectItemAt indexPath: IndexPath) {
         guard indexPath.section == 1 else {return}
         guard let cell = collectionView.cellForItem(at: indexPath) as? FullDisplayCell,
               cell.postImageView.image != nil else {
@@ -164,7 +165,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDelegate
             return
         }
 
-        let user = dataSource.snapshot().itemIdentifiers[indexPath.row].profile
+        let user = dataSource.snapshot().itemIdentifiers[indexPath.row + 1].profile
         let displayViewController = DisplayViewController(withUser: user, withLtk: user.ltks.first!)
         
         var transitionController = TransitionImageController()
