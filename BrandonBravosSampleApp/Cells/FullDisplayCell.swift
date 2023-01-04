@@ -72,7 +72,7 @@ class FullDisplayCell: UICollectionViewCell {
             collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: bottomAnchor),
             collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            collectionView.heightAnchor.constraint(equalToConstant: 90)
+            collectionView.heightAnchor.constraint(equalToConstant: 100)
         ])
 
         let shopThePostLabel = UILabel()
