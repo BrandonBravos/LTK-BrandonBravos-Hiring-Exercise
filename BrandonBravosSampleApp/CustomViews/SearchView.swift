@@ -9,6 +9,11 @@ import UIKit
 
 protocol SearchDelegate {
     func searchEdited(searchTextField: UITextField, withText text: String)
+    func searchSelected()
+}
+
+extension SearchDelegate{
+    func searchSelected(){}
 }
 
 class SearchView: UIView {
@@ -25,6 +30,11 @@ class SearchView: UIView {
         if let text = sender.text {
             delegate?.searchEdited(searchTextField: sender, withText: text)
         }
+    }
+    
+    @objc func searchIsResponder(){
+        delegate?.searchSelected()
+        
     }
     
     required init?(coder: NSCoder) {
@@ -50,6 +60,8 @@ extension SearchView {
         ])
 
         searchTextField.addTarget(self, action: #selector(searchTextEdited), for: .editingChanged)
+        searchTextField.addTarget(self, action: #selector(searchIsResponder), for: .touchDown)
+
         searchTextField.placeholder = "Search fashion, home & more"
         searchTextField.font = UIFont.systemFont(ofSize: 12)
         addSubview(searchTextField)

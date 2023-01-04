@@ -127,7 +127,7 @@ class HomeViewController: UIViewController {
     }
 }
 
-// MARK: - Delegate
+// MARK: - Delegates
 extension HomeViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
@@ -176,12 +176,26 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDelegate
     }
 }
 
+extension HomeViewController: SearchDelegate{
+    func searchEdited(searchTextField: UITextField, withText text: String) {
+       
+    }
+    
+    func searchSelected(){
+        let searchViewController = SearchViewController()
+        searchViewController.view.backgroundColor = .white
+        navigationController?.pushViewController(searchViewController, animated: false)
+    }
+    
+}
+
 // MARK: Layout
 extension HomeViewController {
     private func setUpView() {
         view.backgroundColor = .white
         let headearBarHeight: CGFloat = 45
         let headerView = HeaderSearchLabelView()
+        headerView.searchView.delegate = self
         headerView.backgroundColor = .white
         headerView.searchView.layer.cornerRadius = headearBarHeight / 2
         headerView.isUserInteractionEnabled = true
