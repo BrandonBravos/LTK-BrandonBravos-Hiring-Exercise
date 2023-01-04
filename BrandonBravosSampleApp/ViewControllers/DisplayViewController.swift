@@ -47,7 +47,6 @@ class DisplayViewController: UIViewController {
         }
         
         updateWithPostData()
-     
     }
     
     private func updateWithPostData() {
