@@ -133,7 +133,7 @@ class NetworkManager {
                         let result: UrlImageTuple = ( tuple.url, tuple.image)
                         completion(result)
                     case.failure(let error):
-                        print("error downloading image \(error)")
+                        print("Network Manager: error downloading image \(error)")
                         let result: UrlImageTuple = ("", UIImage(named: "heart_icon_selected")!)
                         completion(result)
                     }
