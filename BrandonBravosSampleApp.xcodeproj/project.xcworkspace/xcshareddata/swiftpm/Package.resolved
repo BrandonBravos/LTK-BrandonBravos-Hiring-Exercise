@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/algolia/algoliasearch-client-swift",
       "state" : {
-        "branch" : "master",
-        "revision" : "8be900c7acc5e2095f26ec1649eb60efca2cbe46"
+        "revision" : "d507e54c2f5e11134ee066727fda976d921f1c10",
+        "version" : "8.16.0"
       }
     },
     {
