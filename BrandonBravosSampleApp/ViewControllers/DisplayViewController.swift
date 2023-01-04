@@ -35,6 +35,7 @@ class DisplayViewController: UIViewController {
     }
     
     override func viewDidLoad() {
+    
         viewModel.fetchProductData { [weak self] in
             DispatchQueue.main.async {
                 self?.collectionView.reloadData()
@@ -45,6 +46,11 @@ class DisplayViewController: UIViewController {
             self?.profileBar.setProfileImage(result)
         }
         
+        updateWithPostData()
+     
+    }
+    
+    private func updateWithPostData() {
         viewModel.getUserPostData {[weak self] in
             DispatchQueue.main.async {
                 self?.collectionView.reloadData()
@@ -99,7 +105,8 @@ extension DisplayViewController: UICollectionViewDelegate, UICollectionViewDataS
     }
 
     // on press open safari
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView,
+                        didSelectItemAt indexPath: IndexPath) {
         switch displaySections[indexPath.section] {
         case .postSection:
             return
@@ -130,18 +137,15 @@ extension DisplayViewController: UICollectionViewDelegate, UICollectionViewDataS
             return
         }
         guard !viewModel.isLoading else { return }
-        viewModel.getUserPostData { [weak self] in
-            DispatchQueue.main.async {
-                self?.collectionView.reloadData()
-            }
-        }
+        updateWithPostData()
     }
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return displaySections.count
     }
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView,
+                        numberOfItemsInSection section: Int) -> Int {
         if section > displaySections.count { return 0}
         switch displaySections[section] {
         case .postSection: return 1

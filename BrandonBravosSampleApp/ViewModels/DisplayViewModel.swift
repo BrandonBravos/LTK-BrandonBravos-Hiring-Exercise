@@ -21,17 +21,11 @@ class DisplayViewModel {
     let apiUrl = "https://api-gateway.rewardstyle.com/api/ltk/v2/ltks/?profile_id="
     let apiUrlEndLimit = "&limit=4"
 
-    // main media for currently displayed post
-    private var postPicture: UIImage?
-
     // products related to this post
     private var products: [Product] = []
 
-    // an array of (url, images) of the products related to this post, this is downloaded once displayed
+    // an array of (url, images) of the products related to this post, this is updated once a products image has been downloaded
     private var loadedProducts = [Product]()
-
-    // the users profile image, this begins download with post
-    private var profileImage: UIImage?
 
     // a dictionary of strings used to update our product when an image has finished downloading
     private var productLinkDic = [ProductImageUrlString: Product]()
@@ -59,15 +53,7 @@ class DisplayViewModel {
 
     /// gets the post pictures and product images
     public func fetchProductData(completion: @escaping () -> Void) {
-        ltk.getPostImage { image in
-            self.postPicture = image
-        }
-
-        var productImageUrls = [String]()
-        for product in products {
-            productImageUrls.append(product.imageUrl)
-        }
-
+        let productImageUrls = products.map {$0.imageUrl}
         downloadProductImages(urls: productImageUrls) { [weak self] result in
             let product = self?.productLinkDic[result.url]
             product?.getProductImage { _ in
