@@ -163,7 +163,6 @@ extension DisplayViewController: UICollectionViewDelegate, UICollectionViewDataS
                 print("DisplayViewController: Unable to dequeue cell LtkImageCell \(indexPath)")
                 return LtkImageCell()
             }
-
             viewModel.getPostImage { image in
                 postCell.setImageView(image)
             }
@@ -217,11 +216,11 @@ extension DisplayViewController: WaterfallLayoutDelegate {
         // noticed a strange correlation with width and height, if you set height to 80, height is multiplied by 5
         switch displaySections[indexPath.section] {
         case .postSection:
-            return CGSize(width: 80, height: viewModel.ltk.getHeightAspectRatio(withWidth: desiredScreenWidth)/5)
+            return CGSize(width: desiredScreenWidth, height: viewModel.ltk.getHeightAspectRatio(withWidth: desiredScreenWidth) - 30)
         case .shopSection:
-            return CGSize(width: 80, height: (UIScreen.main.bounds.width - 20) / 5)
+            return CGSize(width: desiredScreenWidth/5, height: desiredScreenWidth / 5)
         case .userSection:
-            return CGSize(width: 80, height: viewModel.getUser().ltks[indexPath.row].getHeightAspectRatio(withWidth: desiredScreenWidth)/5)
+            return CGSize(width: desiredScreenWidth/2, height: viewModel.getUser().ltks[indexPath.row].getHeightAspectRatio(withWidth: desiredScreenWidth/2))
         }
     }
 

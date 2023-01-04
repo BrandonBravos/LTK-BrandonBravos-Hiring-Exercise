@@ -82,6 +82,7 @@ class FullDisplayCell: UICollectionViewCell {
         addSubview(shopThePostLabel)
         shopThePostLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
+            shopThePostLabel.topAnchor.constraint(equalTo: bottomAnchor, constant: -150),
             shopThePostLabel.bottomAnchor.constraint(equalTo: collectionView.topAnchor, constant: -5),
             shopThePostLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15)
         ])
@@ -95,7 +96,7 @@ class FullDisplayCell: UICollectionViewCell {
             postImageView.topAnchor.constraint(equalTo: userFollowBar.bottomAnchor),
             postImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
             postImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            postImageView.bottomAnchor.constraint(equalTo: shopThePostLabel.topAnchor, constant: -10)
+            postImageView.bottomAnchor.constraint(equalTo: shopThePostLabel.topAnchor, constant: 0)
         ])
     }
 }

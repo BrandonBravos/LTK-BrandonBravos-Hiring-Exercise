@@ -66,7 +66,7 @@ class NetworkManager {
         let url = URL(fileURLWithPath: path)
 
         // not needed, since we already reize image to be smaller, but may be useful for further implementaitons
-        let data = image.jpegData(compressionQuality: 0.2)
+        let data = image.jpegData(compressionQuality: 0.7)
 
         // write data to our temp folder
         try? data?.write(to: url)
@@ -107,7 +107,7 @@ class NetworkManager {
                 return
             }
 
-            let imageQuality: CGFloat = 2 // 2 is a good medium for smooth scrolling on both iPad and iPhone
+            let imageQuality: CGFloat = 1.5 // 2 is a good medium for smooth scrolling on both iPad and iPhone
             let width = UIScreen.main.bounds.width * imageQuality
 
             // resize the image, resizing is needed to keep frame rate low while scrolling
