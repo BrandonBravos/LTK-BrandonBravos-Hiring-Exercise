@@ -22,7 +22,7 @@ class DisplayViewModel {
     let apiUrlEndLimit = "&limit=4"
 
     // products related to this post
-    private var products: [Product] = []
+    private var products: [Product] = [] 
 
     // an array of (url, images) of the products related to this post, this is updated once a products image has been downloaded
     private var loadedProducts = [Product]()
@@ -41,6 +41,8 @@ class DisplayViewModel {
         self.ltk = ltk
         self.products = ltk.products
 
+        
+        
         for product in products {
             productLinkDic[product.imageUrl] = product
         }

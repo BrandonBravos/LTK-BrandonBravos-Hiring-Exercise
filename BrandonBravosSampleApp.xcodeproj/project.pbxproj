@@ -44,6 +44,7 @@
 		A1995A092941E4FC0053052D /* NavigationMenuBaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1995A082941E4FC0053052D /* NavigationMenuBaseController.swift */; };
 		A1995A0B2941E5350053052D /* CustomTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1995A0A2941E5350053052D /* CustomTabBarView.swift */; };
 		A1995A0F2941E5A30053052D /* BlankViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1995A0E2941E5A20053052D /* BlankViewController.swift */; };
+		A1E0A7C8297201670050F074 /* LTKViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E0A7C7297201670050F074 /* LTKViewController.swift */; };
 		A1E5904E296522BF00D475FA /* AlgoliaSearchClient in Frameworks */ = {isa = PBXBuildFile; productRef = A1E5904D296522BF00D475FA /* AlgoliaSearchClient */; };
 		A1FFD462294EEA0C0037BFD4 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1FFD461294EEA0C0037BFD4 /* HomeViewController.swift */; };
 		A1FFD464294EEE830037BFD4 /* FollowedCreatorsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1FFD463294EEE830037BFD4 /* FollowedCreatorsCell.swift */; };
@@ -93,6 +94,7 @@
 		A1995A082941E4FC0053052D /* NavigationMenuBaseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationMenuBaseController.swift; sourceTree = "<group>"; };
 		A1995A0A2941E5350053052D /* CustomTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarView.swift; sourceTree = "<group>"; };
 		A1995A0E2941E5A20053052D /* BlankViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlankViewController.swift; sourceTree = "<group>"; };
+		A1E0A7C7297201670050F074 /* LTKViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LTKViewController.swift; sourceTree = "<group>"; };
 		A1FFD461294EEA0C0037BFD4 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		A1FFD463294EEE830037BFD4 /* FollowedCreatorsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowedCreatorsCell.swift; sourceTree = "<group>"; };
 		A1FFD465294EEF0A0037BFD4 /* SimpleHeaderReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleHeaderReusableView.swift; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 				A1FFD491295249270037BFD4 /* AlgoliaSearchManager.swift */,
 				A16C3B912964A76700589D55 /* TransitionImageController.swift */,
 				A16C3B8F2962493100589D55 /* .swiftlint.yml */,
+				A1E0A7C7297201670050F074 /* LTKViewController.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -397,6 +400,7 @@
 				A1995A072941D9020053052D /* MoreFromUserReusableView.swift in Sources */,
 				A1995A0F2941E5A30053052D /* BlankViewController.swift in Sources */,
 				A1995A0B2941E5350053052D /* CustomTabBarView.swift in Sources */,
+				A1E0A7C8297201670050F074 /* LTKViewController.swift in Sources */,
 				A16C81D8293E932400E749FD /* BrandonBravosSampleApp.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

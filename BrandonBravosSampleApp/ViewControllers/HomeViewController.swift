@@ -12,7 +12,8 @@ private struct ProfileCatagory: Hashable{
     var isPost = true
 }
 
-class HomeViewController: UIViewController {
+
+class HomeViewController: LTKViewController {
     let viewModel = HomeViewModel()
     
     private typealias DataSource = UICollectionViewDiffableDataSource<DisplaySections, ProfileCatagory>
@@ -25,22 +26,9 @@ class HomeViewController: UIViewController {
 
     private let displaySections: [DisplaySections] = [.followedCreators, .followingPost]
     
-    // a custom loading indicator
-    private let loadIndicator = LtkLoadIndicator()
-    
-    lazy var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.headerReferenceSize = CGSize(width: UIScreen.main.bounds.width, height: 45)
-        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 20, right: 10)
-        layout.minimumLineSpacing = 100
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.delegate = self
-        return collectionView
-    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpView()
         // gets an array of creator profiles, their posts, and products related to that post
         viewModel.getPostData { [weak self] profile in
             DispatchQueue.main.async {
@@ -128,7 +116,7 @@ class HomeViewController: UIViewController {
 }
 
 // MARK: - Delegates
-extension HomeViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
+extension HomeViewController{
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -176,65 +164,3 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDelegate
     }
 }
 
-extension HomeViewController: SearchDelegate{
-    func searchEdited(searchTextField: UITextField, withText text: String) {
-       
-    }
-    
-    func searchSelected(){
-        let searchViewController = SearchViewController()
-        searchViewController.view.backgroundColor = .white
-        navigationController?.pushViewController(searchViewController, animated: false)
-    }
-    
-}
-
-// MARK: Layout
-extension HomeViewController {
-    private func setUpView() {
-        view.backgroundColor = .white
-        let headearBarHeight: CGFloat = 45
-        let headerView = HeaderSearchLabelView()
-        headerView.searchView.delegate = self
-        headerView.backgroundColor = .white
-        headerView.searchView.layer.cornerRadius = headearBarHeight / 2
-        headerView.isUserInteractionEnabled = true
-        view.addSubview(headerView)
-        headerView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            headerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
-            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            headerView.heightAnchor.constraint(equalToConstant: headearBarHeight)
-        ])
-
-        collectionView.alpha = 0
-        collectionView.register(SimpleHeaderReusableView.self,
-                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                withReuseIdentifier: SimpleHeaderReusableView.reuseIdentifier)
-        collectionView.register(BlankCollectionViewCell.self,
-                                forCellWithReuseIdentifier: BlankCollectionViewCell.reuseIdentifier)
-        collectionView.register(FollowedCreatorsCell.self,
-                                forCellWithReuseIdentifier: FollowedCreatorsCell.reuseIdentifier)
-        collectionView.register(FullDisplayCell.self,
-                                forCellWithReuseIdentifier: FullDisplayCell.reuseIdentifier)
-
-        view.addSubview(collectionView)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 5),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100)
-        ])
-
-        view.addSubview(loadIndicator)
-        loadIndicator.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            loadIndicator.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 5),
-            loadIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            loadIndicator.widthAnchor.constraint(equalToConstant: 55),
-            loadIndicator.heightAnchor.constraint(equalToConstant: 55)
-        ])
-    }
-}

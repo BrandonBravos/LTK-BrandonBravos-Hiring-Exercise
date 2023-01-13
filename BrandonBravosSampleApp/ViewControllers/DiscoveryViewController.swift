@@ -7,7 +7,8 @@
 
 import UIKit
 
-class DiscoveryViewController: UIViewController {
+
+class DiscoveryViewController: LTKViewController {
     private enum DiscoverySections {
         case discover, alt
     }
@@ -19,22 +20,17 @@ class DiscoveryViewController: UIViewController {
     
     private lazy var dataSource = makeDataSource()
     
-    // a custom loading indicator
-    private let loadIndicator = LtkLoadIndicator()
 
-    lazy var collectionView: UICollectionView = {
-        let layout = DiscoverLayout()
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.register(LtkImageCell.self, forCellWithReuseIdentifier: LtkImageCell.reuseIdentifier)
-        collectionView.delegate = self
-        return collectionView
-    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.addViews()
     }
 
+    override func setCollectionViewLayout() -> UICollectionViewLayout {
+        let layout = DiscoverLayout()
+        layout.delegate = self
+        return layout
+    }
     override func viewWillAppear(_ animated: Bool) {
         guard viewModel.hasInitialized == false else {
             return
@@ -85,7 +81,7 @@ class DiscoveryViewController: UIViewController {
 }
 
 // MARK: Delegates
-extension DiscoveryViewController: UICollectionViewDelegate {
+extension DiscoveryViewController {
     // if we have neared the end ouf our scroll view, download more posts.
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let contentOffsetX = scrollView.contentOffset.y
@@ -119,57 +115,5 @@ extension DiscoveryViewController: DiscoverLayoutDelegate {
             return 0
         }
         return post.getHeightAspectRatio(withWidth: desiredWidth)
-    }
-}
-
-// MARK: Layout
-extension DiscoveryViewController {
-    func addViews() {
-        view.backgroundColor = .white
-        let headearBarHeight: CGFloat = 45
-        let headerView = HeaderSearchLabelView()
-        headerView.backgroundColor = .white
-        headerView.searchView.layer.cornerRadius = headearBarHeight / 2
-        headerView.isUserInteractionEnabled = true
-        view.addSubview(headerView)
-        headerView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            headerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
-            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            headerView.heightAnchor.constraint(equalToConstant: headearBarHeight)
-        ])
-
-        // sets our custom layout delegate
-        if let layout = collectionView.collectionViewLayout as? DiscoverLayout {
-            layout.delegate = self
-        }
-
-        collectionView.register(SimpleHeaderReusableView.self,
-                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                withReuseIdentifier: SimpleHeaderReusableView.reuseIdentifier)
-        collectionView.register(BlankCollectionViewCell.self,
-                                forCellWithReuseIdentifier: BlankCollectionViewCell.reuseIdentifier)
-        collectionView.register(FollowedCreatorsCell.self,
-                                forCellWithReuseIdentifier: FollowedCreatorsCell.reuseIdentifier)
-        collectionView.register(FullDisplayCell.self,
-                                forCellWithReuseIdentifier: FullDisplayCell.reuseIdentifier)
-        view.addSubview(collectionView)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 5),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -80)
-        ])
-
-        view.addSubview(loadIndicator)
-        loadIndicator.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            loadIndicator.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 5),
-            loadIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            loadIndicator.widthAnchor.constraint(equalToConstant: 55),
-            loadIndicator.heightAnchor.constraint(equalToConstant: 55)
-        ])
     }
 }

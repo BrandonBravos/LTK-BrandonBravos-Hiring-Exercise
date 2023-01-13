@@ -12,7 +12,9 @@ struct LtkResponse: Decodable{
     var ltks: [LtkPost]
     var products: [Product]
     var meta: ResponseMeta
+    
     /// creates an array of user profiles from the network call
+
     func createFeaturedProfiles() -> [Profile] {
         // allows searching for profile with user id
         var profileDic: [ProfileIdString: Profile] = [:]

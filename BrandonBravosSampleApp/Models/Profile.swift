@@ -11,6 +11,7 @@ class Profile: Decodable, Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
+    
     static func == (lhs: Profile, rhs: Profile) -> Bool {
         return lhs.id == rhs.id
     }
